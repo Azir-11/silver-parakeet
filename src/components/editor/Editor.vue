@@ -11,6 +11,29 @@ import type { ViewUpdate } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 
+const props = defineProps({
+  // 编译器内的文本
+  modelValue: {
+    type: String,
+    default: "",
+  },
+  // 语言模式
+  language: {
+    type: String,
+    default: "css",
+  },
+  // 主题
+  theme: {
+    type: String,
+    default: "vs-dark",
+  },
+  //宽度
+  width: {
+    type: String,
+    default: "600px",
+  },
+});
+
 const code = ref("null");
 let startState = EditorState.create({
   doc: code.value,
@@ -22,7 +45,7 @@ onMounted(() => {
   const editor = new EditorView({
     parent: document.querySelector("#editor"),
     state: EditorState.create({
-      doc: "123",
+      doc: props.modelValue,
       extensions: [
         // basicSetup 是一套插件集合，包含了很多常用插件
         basicSetup,
@@ -47,8 +70,7 @@ onMounted(() => {
 <style scoped>
 .editor {
   /*动态绑定宽度*/
-  /* width: v-bind(props.width); */
-  width: 800px;
+  width: v-bind(props.width);
   height: 90vh;
   transition: width 0.5s;
 }

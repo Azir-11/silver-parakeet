@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="editor">
-      <Editor :width="width + 'px'" language="javascript" model-value="const a='lzk'" />
+      <Editor :width="width + 'px'" language="javascript" model-value="const hello='world'" />
     </div>
     <div class="viewArea">
       <div class="iframeBox">
@@ -16,6 +16,5 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { RouterLink, RouterView } from "vue-router";
 let width = ref("800");
 </script>

@@ -1,6 +1,6 @@
 import type { NotificationType } from "naive-ui";
 /**
- * 封装的 element-plus 的消息提示框
+ * 封装 naive-ui 的消息提示框
  * @param msg
  * @param type
  */

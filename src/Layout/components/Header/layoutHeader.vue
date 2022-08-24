@@ -13,34 +13,8 @@
           </n-icon>
         </div>
       </div>
-      <!-- 面包屑 -->
-      <div class="ml-4 flex items-center">
-        <n-breadcrumb>
-          <template v-for="routeItem in breadcrumbList" :key="routeItem.name">
-            <n-breadcrumb-item v-if="routeItem.meta.title">
-              <n-dropdown
-                v-if="routeItem.children.length"
-                :options="routeItem.children"
-                @select="dropdownSelect"
-              >
-                <span class="link-text">
-                  {{ routeItem.meta.title }}
-                </span>
-              </n-dropdown>
-              <span v-else class="link-text">
-                {{ routeItem.meta.title }}
-              </span>
-            </n-breadcrumb-item>
-          </template>
-        </n-breadcrumb>
-      </div>
     </div>
     <div class="h-full pr-10 flex items-center">
-      <n-dropdown trigger="hover" :options="options" @select="handleSelect">
-        <div class="hoverBtn">
-          <n-avatar round bordered :size="size + 8" :src="user.imagePath || '/favicon.ico'" />
-        </div>
-      </n-dropdown>
       <n-tooltip trigger="hover">
         <template #trigger>
           <div class="hoverBtn" @click="openSetting">
@@ -69,7 +43,6 @@ import {
 import { renderIcon } from "@/utils/index";
 import { storage } from "@/utils/storage";
 import { CURRENT_USER } from "@/stores/mutation-types";
-import { useRoute, useRouter } from "vue-router";
 import { PageEnum } from "@/enums/pageEnum";
 import ProjectSetting from "./systemSetting.vue";
 const emit = defineEmits(["update:collapsed"]);
@@ -77,9 +50,6 @@ const emit = defineEmits(["update:collapsed"]);
 const BASE_HOME = PageEnum.BASE_HOME;
 
 const message = window["$message"];
-
-const router = useRouter();
-const route = useRoute();
 
 const drawerSetting = ref();
 
@@ -102,13 +72,9 @@ const generator: any = (routerMap) => {
     return currentMenu;
   });
 };
-
-const breadcrumbList = computed(() => {
-  return generator(route.matched);
-});
-const dropdownSelect = (key) => {
-  router.push({ name: key });
-};
+// const dropdownSelect = (key) => {
+// router.push({ name: key });
+// };
 
 // 图表大小
 const size = ref(18);
@@ -143,24 +109,25 @@ const options = [
 ];
 
 const handleSelect = (key: string | number) => {
-  if (key === "logout") {
-    window["$dialog"].warning({
-      title: "警告",
-      content: "确定退出吗？",
-      positiveText: "确定",
-      negativeText: "再想想",
-      onPositiveClick: () => {
-        message.success("已退出");
-        storage.clear();
-        router.replace(`?redirect=${BASE_HOME}`);
-      },
-      onNegativeClick: () => {
-        return;
-      },
-    });
-  } else if (key == "editProfile" || key == "profile") {
-    router.push({ path: `/setting/account` });
-  }
+  // if (key === "logout") {
+  //   window["$dialog"].warning({
+  //     title: "警告",
+  //     content: "确定退出吗？",
+  //     positiveText: "确定",
+  //     negativeText: "再想想",
+  //     onPositiveClick: () => {
+  //       message.success("已退出");
+  //       storage.clear();
+  //       router.replace(`?redirect=${BASE_HOME}`);
+  //     },
+  //     onNegativeClick: () => {
+  //       return;
+  //     },
+  //   });
+  // } else if (key == "editProfile" || key == "profile") {
+  //   router.push({ path: `/setting/account` });
+  // }
+  console.log(key);
 };
 
 const openSetting = () => {

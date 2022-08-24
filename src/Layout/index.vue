@@ -1,34 +1,9 @@
 <template>
-  <n-layout :native-scrollbar="false" has-sider>
-    <n-layout-sider
-      v-if="!mobile"
-      bordered
-      show-trigger="bar"
-      position="static"
-      :on-update:collapsed="changeCollapsed"
-      :collapsed="collapsed"
-      collapse-mode="width"
-      :collapsed-width="64"
-      :width="200"
-      :native-scrollbar="false"
-      class="shadow-xl"
-      style="max-height: 100vh"
-    >
-      <AsideMenu v-if="!mobile" />
-    </n-layout-sider>
-    <n-drawer
-      v-model:show="showSideDrawder"
-      :placement="'left'"
-      close-on-esc
-      :native-scrollbar="true"
-    >
-      <!-- 当点击菜单进行跳转之后隐藏drawer -->
-      <AsideMenu @click-menu-item="changeCollapsed" />
-    </n-drawer>
-    <n-layout style="height: 100vh">
+  <n-layout :native-scrollbar="false">
+    <n-layout style="height: 100vh" has-sider>
       <n-layout-header
         position="absolute"
-        style="height: 64px"
+        :style="`height:${headerHeight}px`"
         class="border-solid border-0 border-b border-gray-200"
       >
         <!-- 点击头部的menu按钮时修改collapesd的值 -->
@@ -36,19 +11,35 @@
       </n-layout-header>
       <n-layout-content
         position="absolute"
-        style="top: 64px; background-color: rgba(246, 249, 248, 1)"
+        :style="`top:${headerHeight}px`"
+        :class="{ 'bg-gray-100': getDarkTheme === false }"
+        has-sider
       >
-        <section>
-          <div class="bg-white flex flex-col justify-end shadow-md" style="height: 46px">
-            <TabsView />
-          </div>
+        <n-layout-sider
+          v-if="!mobile"
+          bordered
+          show-trigger="arrow-circle"
+          position="static"
+          :on-update:collapsed="changeCollapsed"
+          :collapsed="collapsed"
+          collapse-mode="width"
+          :collapsed-width="49"
+          :width="200"
+          :native-scrollbar="false"
+          class="shadow-xl"
+          style="max-height: 100vh"
+        >
+          <AsideMenu />
+        </n-layout-sider>
+        <section class="w-full">
           <n-scrollbar>
-            <div class="p-4 mt-1 box-border" style="min-height: calc(100vh - (65px + 47px + 65px))">
-              <MainView />
+            <div class="box-border overflow-auto" :style="`height:${mainHeight}px`">
+              <Main />
             </div>
             <n-layout-footer
-              style="height: 64px"
-              class="border-solid border-0 border-t border-gray-200 bg-white"
+              :style="`height: ${footerHeight}px`"
+              class="border-solid border-0 border-t border-gray-200"
+              :class="{ 'bg-white': getDarkTheme === false }"
               ><PageFooter
             /></n-layout-footer>
           </n-scrollbar>
@@ -59,17 +50,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { MainView } from "./components/Main";
+import { ref, onMounted, computed } from "vue";
 import { AsideMenu } from "./components/Menu";
 import { PageHeader } from "./components/Header";
 import { TabsView } from "./components/Tab";
 import { PageFooter } from "./components/Footer";
+import Main from "@/views/index/index.vue";
+import { useSystemSetting } from "@/hooks/setting/useSystemSetting";
 
-const collapsed = ref<boolean>();
+const collapsed = ref<boolean>(true);
 const mobile = ref<boolean>(false);
 const showSideDrawder = ref(false);
-const mobileWidth = 800;
+const headerHeight = 40;
+const footerHeight = 34;
+const mainHeight = computed(() => {
+  return document.body.clientHeight - headerHeight - footerHeight;
+});
+
+console.log(mainHeight.value);
 
 /**
  * 如果当前是PC端，则伸缩侧边导航
@@ -83,35 +81,7 @@ const changeCollapsed = () => {
   }
 };
 
-//判断是否触发移动端模式
-const checkMobileMode = () => {
-  if (document.body.clientWidth <= mobileWidth) {
-    // console.log("当前是移动端");
-    mobile.value = true;
-  } else {
-    // console.log("当前是PC端");
-    // 如果从移动端切换到PC端，则将drawer隐藏
-    if (mobile.value) {
-      showSideDrawder.value = false;
-    }
-    mobile.value = false;
-  }
-};
-
-const watchWidth = () => {
-  const Width = document.body.clientWidth;
-  if (Width <= 950) {
-    collapsed.value = true;
-  } else collapsed.value = false;
-  checkMobileMode();
-};
-
-onMounted(() => {
-  checkMobileMode();
-  watchWidth();
-  window.addEventListener("resize", watchWidth);
-  // window["$loading"].finish();
-});
+const { getDarkTheme } = useSystemSetting();
 </script>
 
 <style></style>
