@@ -8,13 +8,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-
 // 标签页列表
 const tabsList: any = computed(() => {
   return ["HTML", "CSS", "JAVASCRIPT"];
 });
-
-const changeMode = (mode) => {
+const changeMode = (mode: string) => {
   console.log(mode);
 };
 

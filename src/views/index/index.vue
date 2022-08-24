@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="editor">
-      <Editor :width="width + 'px'" language="javascript" :model-value="storage.get('code')" />
+      <Editor :width="width + 'px'" :model-value="'测测码'" />
     </div>
     <div class="viewArea">
       <div class="iframeBox">
@@ -17,6 +17,5 @@
 <script setup lang="ts">
 import { storage } from "@/utils/storage";
 import { ref } from "vue";
-
 let width = ref("800");
 </script>
