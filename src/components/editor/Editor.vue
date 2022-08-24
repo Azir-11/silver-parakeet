@@ -57,6 +57,7 @@ onMounted(() => {
           if (localValue.value != v.state.doc.toString()) {
             localValue.value = v.state.doc.toString();
             storage.set("code", localValue.value);
+            //本地存储代码,不小心关闭也能重新编辑
             console.log("数据更新了");
           } else {
             console.log("数据没更新");
