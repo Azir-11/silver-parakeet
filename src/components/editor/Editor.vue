@@ -10,7 +10,7 @@ import { keymap } from "@codemirror/view";
 import type { ViewUpdate } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
-
+import { storage } from "@/utils/storage";
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
@@ -56,6 +56,7 @@ onMounted(() => {
           // console.log(v.state.doc.toJSON);
           if (localValue.value != v.state.doc.toString()) {
             localValue.value = v.state.doc.toString();
+            storage.set("code", localValue.value);
             console.log("数据更新了");
           } else {
             console.log("数据没更新");
