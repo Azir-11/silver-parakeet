@@ -33,6 +33,13 @@
         </n-layout-sider>
         <section class="w-full">
           <n-scrollbar>
+            <div
+              class="pl-12"
+              :class="{ 'bg-white': getDarkTheme === false }"
+              :style="`height:${tabsHeight}px;`"
+            >
+              <TabsView />
+            </div>
             <div class="box-border overflow-auto" :style="`height:${mainHeight}px`">
               <Main />
             </div>
@@ -62,9 +69,10 @@ const collapsed = ref<boolean>(true);
 const mobile = ref<boolean>(false);
 const showSideDrawder = ref(false);
 const headerHeight = 40;
+const tabsHeight = 40;
 const footerHeight = 34;
 const mainHeight = computed(() => {
-  return document.body.clientHeight - headerHeight - footerHeight;
+  return document.body.clientHeight - headerHeight - tabsHeight - footerHeight;
 });
 
 console.log(mainHeight.value);

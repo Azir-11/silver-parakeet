@@ -40,7 +40,6 @@ import {
   FlameOutline,
   SettingsOutline,
 } from "@vicons/ionicons5";
-import { renderIcon } from "@/utils/index";
 import { storage } from "@/utils/storage";
 import { CURRENT_USER } from "@/stores/mutation-types";
 import { PageEnum } from "@/enums/pageEnum";
@@ -84,29 +83,6 @@ const changeCollapsed = () => {
 };
 
 const user = storage.get(CURRENT_USER);
-
-const options = [
-  {
-    label: `${user.userName}`,
-    key: "userName",
-    icon: renderIcon(FlameOutline),
-  },
-  {
-    label: "用户资料",
-    key: "profile",
-    icon: renderIcon(UserIcon),
-  },
-  {
-    label: "编辑用户资料",
-    key: "editProfile",
-    icon: renderIcon(EditIcon),
-  },
-  {
-    label: "退出登录",
-    key: "logout",
-    icon: renderIcon(LogoutIcon),
-  },
-];
 
 const handleSelect = (key: string | number) => {
   // if (key === "logout") {
