@@ -6,7 +6,6 @@
         :style="`height:${headerHeight}px`"
         class="border-solid border-0 border-b border-gray-200"
       >
-        <!-- 点击头部的menu按钮时修改collapesd的值 -->
         <PageHeader @update:collapsed="changeCollapsed" />
       </n-layout-header>
       <n-layout-content
@@ -57,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, computed } from "vue";
 import { AsideMenu } from "./components/Menu";
 import { PageHeader } from "./components/Header";
 import { TabsView } from "./components/Tab";
@@ -75,12 +74,6 @@ const mainHeight = computed(() => {
   return document.body.clientHeight - headerHeight - tabsHeight - footerHeight;
 });
 
-console.log(mainHeight.value);
-
-/**
- * 如果当前是PC端，则伸缩侧边导航
- * 如果当前是移动端，则显隐drawer
- */
 const changeCollapsed = () => {
   if (mobile.value && collapsed.value) {
     showSideDrawder.value = !showSideDrawder.value;

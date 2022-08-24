@@ -7,9 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, watch } from "vue";
-import { storage } from "@/utils/storage";
-const message = window["$message"];
+import { computed } from "vue";
 
 // 标签页列表
 const tabsList: any = computed(() => {
