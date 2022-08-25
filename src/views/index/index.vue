@@ -1,7 +1,13 @@
 <template>
   <section>
     <div v-for="(item, index) in editorModes" :key="index" class="editor">
-      <Editor v-if="index === editorActiveIndex" :width="`${width}px`" :language="item" />
+      <Editor
+        v-if="index === editorActiveIndex"
+        :width="`${width}px`"
+        :language="getLanguage(item)"
+        :model-value="editorCode"
+        @change-code="changeCode"
+      />
     </div>
     <div class="viewArea">
       <div class="iframeBox">
@@ -15,17 +21,39 @@
 </template>
 
 <script setup lang="ts">
-import { storage } from "@/utils/storage";
 import { useWebCodes } from "@/hooks/setting/useWebCodes";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
+import { javascript } from "@codemirror/lang-javascript";
+import type { LanguageSupport } from "@codemirror/language";
 
-let width = ref("800");
+let width = ref<number>(800);
 const codeStore = useWebCodes();
+
 const editorActiveIndex = computed(() => {
   return codeStore.index;
 });
 const editorModes = computed(() => {
   return codeStore.getModes;
 });
+const editorCode = computed(() => {
+  return codeStore.getModeCode;
+});
+
+const getLanguage = (language: string): LanguageSupport => {
+  switch (language) {
+    case "HTML":
+      return html();
+    case "JAVASCRIPT":
+      return javascript();
+    case "CSS":
+      return css();
+  }
+};
+
+const changeCode = (newCode: string) => {
+  codeStore.setModeCode(newCode);
+};
 </script>
 
 <style></style>
