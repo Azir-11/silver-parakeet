@@ -1,17 +1,23 @@
 <template>
   <n-tabs type="line">
-    <n-tab v-for="(item, index) in tabsList" :key="index" :name="item" @click="changeMode(index)">
+    <n-tab
+      v-for="(item, index) in store.getModes"
+      :key="index"
+      :name="item"
+      @click="changeMode(index)"
+    >
       {{ item }}
     </n-tab>
   </n-tabs>
 </template>
 
 <script setup lang="ts">
-import { tabsList, usetabIndex } from "@/hooks/setting/usetabsListChange";
+import { useWebCodes } from "@/hooks/setting/useWebCodes";
 // 标签页列表
+const store = useWebCodes();
 
 const changeMode = (index: number) => {
-  usetabIndex().setIndex(index);
+  store.setIndex(index);
 };
 
 /**
