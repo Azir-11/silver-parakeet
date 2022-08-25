@@ -15,15 +15,17 @@ const localValue = ref<string>();
 //   });
 
 
+
 export interface editorSetting {
-  defaultValue: string;
-  language: LanguageSupport;
-  theme?:string,
-  width?:string
+  defaultValue: string; //默认值
+  language: LanguageSupport; //语言(目前只有html,css,js)
+  theme?: string;//主题(可选,以后添加多点)
+  width?: string;//宽度(可选)
 }
 
 let editor: EditorView;
-export const createEditor = (setting:editorSetting): EditorView => { //初始化实例
+export const createEditor = (setting: editorSetting): EditorView => {
+  //初始化实例
   editor = new EditorView({
     parent: document.querySelector("#editor"),
     state: EditorState.create({
@@ -48,8 +50,9 @@ export const createEditor = (setting:editorSetting): EditorView => { //初始化
   return editor;
 };
 
-export const destoryEditor=()=>{
-    editor.destroy();
-}
+export const destoryEditor = (Editor: EditorView) => {
+  //销毁实例
+  Editor.destroy();
+};
 
-export const getlocalValue=computed(()=>localValue);//获取值
+export const getlocalValue = computed(() => localValue); //获取值

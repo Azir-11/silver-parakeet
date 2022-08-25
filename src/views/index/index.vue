@@ -1,7 +1,11 @@
 <template>
   <section>
-    <div class="editor">
-      <Editor :width="width + 'px'" :model-value="'测测码'" />
+    <div v-for="(value, index) in tabsList" :key="index" class="editor">
+      <Editor
+        v-if="tabsList[tabIndex] === value"
+        :width="width + 'px'"
+        :language="tabsList[index]"
+      />
     </div>
     <div class="viewArea">
       <div class="iframeBox">
@@ -16,6 +20,11 @@
 
 <script setup lang="ts">
 import { storage } from "@/utils/storage";
-import { ref } from "vue";
+import { tabsList, usetabIndex } from "@/hooks/setting/usetabsListChange";
+import { ref, ComputedRef, computed } from "vue";
+
 let width = ref("800");
+const tabIndex: ComputedRef<number> = computed(() => usetabIndex().getIndex);
 </script>
+
+<style></style>

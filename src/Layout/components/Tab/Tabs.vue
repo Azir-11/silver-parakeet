@@ -1,6 +1,6 @@
 <template>
   <n-tabs type="line">
-    <n-tab v-for="(item, index) in tabsList" :key="index" :name="item" @click="changeMode(item)">
+    <n-tab v-for="(item, index) in tabsList" :key="index" :name="item" @click="changeMode(index)">
       {{ item }}
     </n-tab>
   </n-tabs>
@@ -8,12 +8,11 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { tabsList, usetabIndex } from "@/hooks/setting/usetabsListChange";
 // 标签页列表
-const tabsList: any = computed(() => {
-  return ["HTML", "CSS", "JAVASCRIPT"];
-});
-const changeMode = (mode: string) => {
-  console.log(mode);
+
+const changeMode = (index: number) => {
+  usetabIndex().setIndex(index);
 };
 
 /**
