@@ -6,7 +6,7 @@ interface codeItem {
 /**
  * 初始值
  */
-const codeList = ref<Array<codeItem>>([
+const defultCodeList: Array<codeItem> = [
   {
     mode: "HTML",
     code: "<h1> hello,world </h1>",
@@ -21,15 +21,13 @@ const codeList = ref<Array<codeItem>>([
     mode: "JAVASCRIPT",
     code: "console.log('hello,world')",
   },
-]);
-
-// const index = ref<number>(0);
+];
 
 export const useWebCodes = defineStore({
   id: "webCodes",
   state: () => ({
     index: 0,
-    codeList,
+    codeList: defultCodeList,
   }),
   getters: {
     getModes() {
