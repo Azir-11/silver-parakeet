@@ -38,6 +38,9 @@ export const useWebCodes = defineStore({
     getModeCode() {
       return this.codeList[this.index].code;
     },
+    getTotalCode() {
+      return this.codeList;
+    },
     getIndex() {
       return this.index;
     },

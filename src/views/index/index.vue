@@ -11,7 +11,7 @@
     </div>
     <div class="viewArea">
       <div class="iframeBox">
-        <!-- <iframe width="680px" height="500px" src="../../public/html/instance.html"></iframe> -->
+        <Iframe></Iframe>
       </div>
       <div class="consoleBox">
         <div class="console"></div>
