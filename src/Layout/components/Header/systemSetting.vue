@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, CSSProperties } from "vue";
+import { CSSProperties } from "vue";
 import { useSystemSettingStore } from "@/stores/modules/systemSetting";
 import { Moon, SunnySharp, Checkmark } from "@vicons/ionicons5";
 

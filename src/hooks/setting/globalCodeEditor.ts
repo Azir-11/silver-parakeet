@@ -4,7 +4,6 @@ import { keymap } from "@codemirror/view";
 import type { ViewUpdate } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 import type { LanguageSupport } from "@codemirror/language";
-import { computed, ref } from "vue";
 
 const localValue = ref<string>();
 //值

@@ -7,7 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { AppProvider } from "@/components/Application";
 import Layout from "@/Layout/index.vue";
 import { zhCN, dateZhCN, darkTheme } from "naive-ui";

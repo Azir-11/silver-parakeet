@@ -30,9 +30,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { MenuOutline, ReloadOutline, SettingsOutline } from "@vicons/ionicons5";
 import ProjectSetting from "./systemSetting.vue";
+
 const emit = defineEmits(["update:collapsed"]);
 
 const drawerSetting = ref();

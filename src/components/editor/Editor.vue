@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from "vue";
 import { createEditor, editorSetting } from "@/hooks/setting/globalCodeEditor";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";

@@ -2,7 +2,7 @@ import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } fro
 import Axios from "axios";
 import type { Request } from "@/axios/http/type";
 import { message } from "./message";
-import { ACCESS_TOKEN } from "@/stores/mutation-types";
+// import { ACCESS_TOKEN } from "@/stores/mutation-types";
 import { storage } from "@/utils/storage";
 
 export const baseURL = "http://localhost:8000/api/";
@@ -75,9 +75,9 @@ class EnclosureHttp {
         /*
          * 在请求发出去之前作出一下处理,添加token
          * */
-        if (storage.get(ACCESS_TOKEN)) {
-          (config as any).headers.token = storage.get(ACCESS_TOKEN).value;
-        }
+        // if (storage.get(ACCESS_TOKEN)) {
+        //   (config as any).headers.token = storage.get(ACCESS_TOKEN).value;
+        // }
         return config;
       },
       (err) => {

@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, unref } from "vue";
 import type { MenuOption } from "naive-ui";
 
 const menus = ref<any[]>([]);

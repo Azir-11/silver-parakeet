@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { storage } from "@/utils/storage";
 import { tabsList, usetabIndex } from "@/hooks/setting/usetabsListChange";
-import { ref, ComputedRef, computed } from "vue";
+import { ComputedRef } from "vue";
 
 let width = ref("800");
 const tabIndex: ComputedRef<number> = computed(() => usetabIndex().getIndex);

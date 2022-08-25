@@ -1,5 +1,3 @@
-import { createApp } from "vue";
-
 import App from "./App.vue";
 import "./assets/css/taiwind.css";
 import { setupStore } from "@/stores";

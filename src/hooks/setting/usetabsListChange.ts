@@ -1,6 +1,3 @@
-import { defineStore, StateTree } from "pinia";
-import { computed, Ref, ref } from "vue";
-
 export const tabsList: any = computed(() => {
   return ["HTML", "CSS", "JAVASCRIPT"];
 });

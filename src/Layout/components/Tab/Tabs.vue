@@ -7,7 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import { tabsList, usetabIndex } from "@/hooks/setting/usetabsListChange";
 // 标签页列表
 
