@@ -14,13 +14,11 @@ const localValue = ref<string>();
 //     extensions: [keymap.of(defaultKeymap)],
 //   });
 
-
-
 export interface editorSetting {
   defaultValue: string; //默认值
   language: LanguageSupport; //语言(目前只有html,css,js)
-  theme?: string;//主题(可选,以后添加多点)
-  width?: string;//宽度(可选)
+  theme?: string; //主题(可选,以后添加多点)
+  width?: string; //宽度(可选)
 }
 
 let editor: EditorView;

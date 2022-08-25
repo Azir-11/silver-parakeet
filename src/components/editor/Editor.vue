@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from "vue";
-import { createEditor, editorSetting, destoryEditor } from "@/hooks/setting/globalCodeEditor";
+import { onMounted } from "vue";
+import { createEditor, editorSetting } from "@/hooks/setting/globalCodeEditor";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";

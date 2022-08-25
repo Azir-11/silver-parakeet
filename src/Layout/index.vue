@@ -56,7 +56,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
 import { AsideMenu } from "./components/Menu";
 import { PageHeader } from "./components/Header";
 import { TabsView } from "./components/Tab";
