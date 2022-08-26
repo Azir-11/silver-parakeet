@@ -29,7 +29,7 @@ const editorTotalCode = computed(() => {
 });
 
 const iframeRef = ref<HTMLIFrameElement>(null);
-const iframeWindows = ref<WindowProxy>(null);
+const iframeWindows = ref(null);
 onMounted(() => {
   iframeWindows.value = iframeRef.value.contentWindow;
 
