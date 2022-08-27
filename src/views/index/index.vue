@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="w-full">
-      <Iframe :width="resultBoxWidth"></Iframe>
+      <Iframe class="bg-white" :width="resultBoxWidth"></Iframe>
       <div class="console"></div>
     </div>
   </section>
