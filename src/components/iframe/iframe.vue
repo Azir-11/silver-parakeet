@@ -1,5 +1,10 @@
 <template>
-  <iframe ref="iframeRef" :width="`${width}px`" :height="`${height}px`" src="/html/instance.html">
+  <iframe
+    ref="iframeRef"
+    :width="`${props.width}px`"
+    :height="`${props.height}px`"
+    src="/html/instance.html"
+  >
   </iframe>
 </template>
 
@@ -8,8 +13,8 @@ import { useWebCodes } from "@/hooks/setting/useWebCodes";
 
 const props = defineProps({
   width: {
-    type: String,
-    default: "640",
+    type: Number,
+    default: 640,
   },
   height: {
     type: String,

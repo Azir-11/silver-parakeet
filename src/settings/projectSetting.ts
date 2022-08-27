@@ -21,7 +21,7 @@ export const appThemeList: string[] = [
 
 const setting = {
   //深色主题
-  darkTheme: false,
+  darkTheme: true,
   //系统主题色
   appTheme: "#2d8cf0",
   //系统内置主题色列表
@@ -30,8 +30,6 @@ const setting = {
   navMode: "vertical",
   //导航风格 dark 暗色侧边栏 light 白色侧边栏 header-dark 暗色顶栏
   navTheme: "dark",
-  // 是否处于移动端模式
-  MobileModel: false,
   //顶部
   headerSetting: {
     //背景色

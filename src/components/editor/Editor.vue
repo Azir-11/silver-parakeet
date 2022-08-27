@@ -1,14 +1,17 @@
 <template>
-  <div id="editor" ref="editorDom"></div>
+  <div ref="editorDom" class="h-full" :style="`width:${props.width}px`"></div>
 </template>
 
 <script lang="ts" setup>
+import { PropType } from "vue";
 import { EditorView, basicSetup } from "codemirror";
 import type { ViewUpdate } from "@codemirror/view";
 import { EditorState, Facet } from "@codemirror/state";
+import { Extension } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 import { LanguageSupport } from "@codemirror/language";
+import { oneDarkTheme } from "@codemirror/theme-one-dark";
 
 const editorDom = ref(null);
 
@@ -25,13 +28,13 @@ const props = defineProps({
   },
   // 主题
   theme: {
-    type: String,
-    default: "vs-dark",
+    type: Object as PropType<Extension>,
+    default: oneDarkTheme,
   },
   //宽度
   width: {
-    type: String,
-    default: "600px",
+    type: Number,
+    default: 600,
   },
 });
 
@@ -47,6 +50,7 @@ onMounted(() => {
         // basicSetup 是一套插件集合，包含了很多常用插件
         basicSetup,
         props.language,
+        oneDarkTheme,
         // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
         EditorView.updateListener.of((v: ViewUpdate) => {
           if (props.modelValue != v.state.doc.toString()) {
@@ -61,11 +65,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.editor {
-  /*动态绑定宽度*/
-  width: v-bind(props.width);
-  height: 90vh;
-  transition: width 0.5s;
+<style>
+.ͼ1.cm-editor {
+  height: 100%;
 }
 </style>
