@@ -1,10 +1,5 @@
 <template>
-  <iframe
-    ref="iframeRef"
-    :width="`${width}px`"
-    :height="`${height}px`"
-    src="/public/html/instance.html"
-  >
+  <iframe ref="iframeRef" :width="`${width}px`" :height="`${height}px`" src="/html/instance.html">
   </iframe>
 </template>
 
