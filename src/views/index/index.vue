@@ -27,10 +27,12 @@ import { javascript } from "@codemirror/lang-javascript";
 import type { LanguageSupport } from "@codemirror/language";
 import { oneDarkTheme } from "@codemirror/theme-one-dark";
 
-const editorWidth = ref<number>(800);
-const resultBoxWidth = computed(() => {
-  return document.body.clientWidth - editorWidth.value - 60;
-});
+const editorWidth = ref<number>(0);
+const resultBoxWidth = ref<number>(0);
+const watchWidth = () => {
+  editorWidth.value = document.body.clientWidth / 2;
+  resultBoxWidth.value = document.body.clientWidth - editorWidth.value - 60;
+};
 
 const codeStore = useWebCodes();
 
@@ -58,6 +60,11 @@ const getLanguage = (language: string): LanguageSupport => {
 const changeCode = (newCode: string) => {
   codeStore.setModeCode(newCode);
 };
+
+onMounted(() => {
+  watchWidth();
+  window.addEventListener("resize", watchWidth);
+});
 </script>
 
 <style></style>
