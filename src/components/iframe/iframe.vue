@@ -10,6 +10,8 @@
 
 <script setup lang="ts">
 import { useWebCodes } from "@/hooks/setting/useWebCodes";
+import type { codeItem } from "@/hooks/setting/useWebCodes";
+import { ComputedRef } from "vue";
 
 const props = defineProps({
   width: {
@@ -24,21 +26,26 @@ const props = defineProps({
 
 const webCodes = useWebCodes();
 
-const editorTotalCode = computed(() => {
+const editorTotalCode: ComputedRef<codeItem> = computed(() => {
   return webCodes.getTotalCode;
 });
 
 const iframeRef = ref<HTMLIFrameElement>(null);
 const iframeWindows = ref(null);
+let timer;
 onMounted(() => {
   iframeWindows.value = iframeRef.value.contentWindow;
-
-  iframeWindows.value.document.open();
-  console.log(editorTotalCode.value);
-  iframeWindows.value.document.write(
-    `${editorTotalCode.value[0].code} <style>${editorTotalCode.value[1].code}</style><script>${editorTotalCode.value[2].code}</scirpt>`,
-  );
-  iframeWindows.value.document.close();
+  console.log(iframeWindows.value.document);
+  watch(editorTotalCode.value, (_newValue, _oldValue) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const script = document.createElement("script");
+      script.innerHTML = _newValue[2].code;
+      iframeWindows.value.document.head.innerHTML = `<style>${_newValue[1].code}</style>`;
+      iframeWindows.value.document.body.innerHTML = _newValue[0].code;
+      iframeWindows.value.document.body.appendChild(script);
+    }, 500);
+  });
 });
 </script>
 
