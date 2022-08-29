@@ -37,6 +37,7 @@ onMounted(() => {
   iframeWindows.value = iframeRef.value.contentWindow;
   console.log(iframeWindows.value.document);
   watch(editorTotalCode.value, (_newValue, _oldValue) => {
+    iframeRef.value.src = "/html/instance.html";
     clearTimeout(timer);
     timer = setTimeout(() => {
       const script = document.createElement("script");
