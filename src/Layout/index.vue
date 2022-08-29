@@ -37,7 +37,9 @@
               :class="{ 'bg-white': getDarkTheme === false }"
               :style="`height:${tabsHeight}px;`"
             >
-              <TabsView />
+              <div class="w-1/4">
+                <TabsView />
+              </div>
             </div>
             <div class="box-border overflow-auto" :style="`height:${mainHeight}px`">
               <Main />

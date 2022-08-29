@@ -11,18 +11,12 @@ import { Extension } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
 import { defaultKeymap } from "@codemirror/commands";
 import { LanguageSupport } from "@codemirror/language";
-import { oneDarkTheme } from "@codemirror/theme-one-dark";
-import { tags } from "@lezer/highlight";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { syntaxHighlighting } from "@codemirror/language";
+import { projectTheme } from "./theme/projectTheme";
+import { projectHighlightStyle } from "./theme/projectHighlightStyle";
 
-const myHighlightStyle = HighlightStyle.define([
-  { tag: tags.number, color: "#fff" },
-  { tag: tags.keyword, color: "#fc6" },
-  // 行注释
-  { tag: tags.comment, color: "#676e95", fontStyle: "italic" },
-  // 块注释
-  { tag: tags.blockComment, color: "#676e95", fontStyle: "italic" },
-]);
+import { javascriptLanguage } from "@codemirror/lang-javascript";
+import { syntaxTree } from "@codemirror/language";
 
 const editorDom = ref(null);
 
@@ -40,7 +34,7 @@ const props = defineProps({
   // 主题
   theme: {
     type: Object as PropType<Extension>,
-    default: oneDarkTheme,
+    default: projectTheme,
   },
   //宽度
   width: {
@@ -51,44 +45,52 @@ const props = defineProps({
 
 const emit = defineEmits(["changeCode"]);
 
-const bgColor = "#282c34";
+const completePropertyAfter = ["PropertyName", ".", "?."];
+const dontCompleteIn = [
+  "TemplateString",
+  "LineComment",
+  "BlockComment",
+  "VariableDefinition",
+  "PropertyDefinition",
+];
 
-let myTheme = EditorView.theme({
-  "&": {
-    color: "#b0b7c3",
-    backgroundColor: bgColor,
-  },
-  ".cm-content": {
-    caretColor: bgColor,
-  },
-  // 光标
-  ".cm-cursor": {
-    borderLeftColor: "#fff",
-  },
-  // 选中的代码
-  "&.cm-focused .cm-selectionBackground, ::selection": {
-    backgroundColor: "#394e75",
-  },
-  // 光标所在行
-  ".cm-activeLine": {
-    backgroundColor: "#2f323b",
-    // borderTop: "#2c2c2c 1px solid",
-    // borderBottom: "#2c2c2c 1px solid",
-  },
-  // 侧边行号栏
-  ".cm-gutters": {
-    backgroundColor: "#282c34",
-    color: "#535773",
-    border: "none",
-  },
-  // 选中的行号
-  ".cm-activeLineGutter": {
-    backgroundColor: "#1e1e1e",
-    color: "#9DA5B3",
-  },
-  // ".ͼc": {
-  //   color: "#c678dd",
-  // },
+function completeFromGlobalScope(context: any) {
+  let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
+
+  if (
+    completePropertyAfter.includes(nodeBefore.name) &&
+    nodeBefore.parent?.name == "MemberExpression"
+  ) {
+    let object = nodeBefore.parent.getChild("Expression");
+    if (object?.name == "VariableName") {
+      let from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
+      let variableName = context.state.sliceDoc(object.from, object.to);
+      if (typeof window[variableName] == "object")
+        return completeProperties(from, window[variableName]);
+    }
+  } else if (nodeBefore.name == "VariableName") {
+    return completeProperties(nodeBefore.from, window);
+  } else if (context.explicit && !dontCompleteIn.includes(nodeBefore.name)) {
+    return completeProperties(context.pos, window);
+  }
+  return null;
+}
+function completeProperties(from: number, object: Object) {
+  let options = [];
+  for (let name in object) {
+    options.push({
+      label: name,
+      type: typeof object[name] == "function" ? "function" : "variable",
+    });
+  }
+  return {
+    from,
+    options,
+    validFor: /^[\w$]*$/,
+  };
+}
+const globalJavaScriptCompletions = javascriptLanguage.data.of({
+  autocomplete: completeFromGlobalScope,
 });
 
 onMounted(() => {
@@ -101,9 +103,10 @@ onMounted(() => {
         // basicSetup 是一套插件集合，包含了很多常用插件
         basicSetup,
         props.language,
+        globalJavaScriptCompletions,
         // oneDarkTheme,
-        myTheme,
-        syntaxHighlighting(myHighlightStyle),
+        projectTheme,
+        syntaxHighlighting(projectHighlightStyle),
         // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
         EditorView.updateListener.of((v: ViewUpdate) => {
           if (props.modelValue != v.state.doc.toString()) {
