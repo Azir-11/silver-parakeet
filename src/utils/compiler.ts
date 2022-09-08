@@ -54,7 +54,7 @@ async function compileSass(code: string) {
   let sass;
   if (!loader.get("sass")) {
     sass = require("../../public/js/compiler/sass");
-    sass.setWorkerUrl(`${publicPath}js/compiler/sass.worker.js`);
+    sass.setWorkerUrl(`../../public/js/compiler/sass.worker.js`);
     loader.set("sass", sass);
   } else {
     sass = loader.get("sass");

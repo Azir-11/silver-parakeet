@@ -1,19 +1,20 @@
-import Loader from './loader'
-const loader = new Loader()
+import Loader from "./loader";
+const loader = new Loader();
 
 /**
  * Handling the code execution of the instance iframe
  * 处理实例iframe的代码执行
  */
 class IframeHandler {
-  static instance: any
-  iframe: HTMLIFrameElement
+  static instance: any;
+  iframe: HTMLIFrameElement;
   constructor(iframe) {
     if (!IframeHandler.instance) {
-      this.iframe = iframe
-      IframeHandler.instance = this
+      this.iframe = iframe;
+      IframeHandler.instance = this;
+      console.log(this);
     }
-    return IframeHandler.instance
+    return IframeHandler.instance;
   }
 
   /**
@@ -26,17 +27,17 @@ class IframeHandler {
    * @param {Function} onerror 代码执行异常监听函数
    * @param {Function} onunhandledrejection Promise执行异常监听函数
    */
-  async insertCode (code, isMD) {
-    const { HTMLCode, CSSCode, JSCode } = code
-    const iWin = this.iframe.contentWindow
-    const iDoc = iWin.document
-    let extCss = '',
-      extJS = ''
- 
-    iDoc.open()
+  async insertCode(code, isMD) {
+    const { HTMLCode, CSSCode, JSCode } = code;
+    const iWin = this.iframe.contentWindow;
+    const iDoc = iWin.document;
+    let extCss = "",
+      extJS = "";
+
+    iDoc.open();
     // 在执行js脚本前向iframe注入错误监听回调函数
-    iWin.onerror = onerror
-    iWin.onunhandledrejection = onunhandledrejection
+    iWin.onerror = onerror;
+    iWin.onunhandledrejection = onunhandledrejection;
     iDoc.write(`
     <!DOCTYPE html>
     <html lang="en">
@@ -53,7 +54,9 @@ class IframeHandler {
     ${HTMLCode}
     ${extJS}
     <script>
-    ${isMD ? `
+    ${
+      isMD
+        ? `
       !function() {
         /**
          * Render the KaTeX
@@ -82,21 +85,22 @@ class IframeHandler {
           flowchart.parse(code).drawSVG('flow'+i)
         }
       }()
-      `.trim() : ''
-      }
+      `.trim()
+        : ""
+    }
     ${JSCode}
     </script>
     </body>
     </html>
-    `)
-    iDoc.close()
+    `);
+    iDoc.close();
     return new Promise((resolve) => {
       // 执行用户在写的onload回调函数
-      iWin.onload?.()
+      iWin.onload?.();
       this.iframe.onload = () => {
-        resolve(() => {})
-      }
-    })
+        resolve(() => {});
+      };
+    });
   }
 
   /**
@@ -128,8 +132,8 @@ class IframeHandler {
   //     iframeWindow.flowchart.parse(code).drawSVG(`flow${i}`)
   //   }
   // }
-  clearIframe () {
-    IframeHandler.instance = null
+  clearIframe() {
+    IframeHandler.instance = null;
   }
 }
-export default IframeHandler
+export default IframeHandler;
