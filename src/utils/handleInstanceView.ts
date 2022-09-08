@@ -96,7 +96,7 @@ class IframeHandler {
     iDoc.close();
     return new Promise((resolve) => {
       // 执行用户在写的onload回调函数
-      iWin.onload?.();
+      iWin.onload?.(null);
       this.iframe.onload = () => {
         resolve(() => {});
       };
