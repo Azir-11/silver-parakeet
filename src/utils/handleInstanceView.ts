@@ -27,13 +27,10 @@ class IframeHandler {
    * @param {Function} onerror 代码执行异常监听函数
    * @param {Function} onunhandledrejection Promise执行异常监听函数
    */
-  async insertCode(code, isMD) {
+  async insertCode(code) {
     const { HTMLCode, CSSCode, JSCode } = code;
     const iWin = this.iframe.contentWindow;
     const iDoc = iWin.document;
-    let extCss = "",
-      extJS = "";
-
     iDoc.open();
     // 在执行js脚本前向iframe注入错误监听回调函数
     iWin.onerror = onerror;
@@ -44,7 +41,6 @@ class IframeHandler {
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    ${extCss}
     <title></title>
     <style>
     ${CSSCode}
@@ -52,51 +48,16 @@ class IframeHandler {
     </head>
     <body translate="no">
     ${HTMLCode}
-    ${extJS}
+    </body>
     <script>
-    ${
-      isMD
-        ? `
-      !function() {
-        /**
-         * Render the KaTeX
-         * 渲染KaTeX数学公式
-         */
-        renderMathInElement(document.body, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false},
-            {left: '\\(', right: '\\)', display: false},
-            {left: '\\[', right: '\\]', display: true}
-          ]
-        })
-        /**
-         * Render the flowchart in markdown
-         * 渲染markdown中的流程图
-         */
-        const flows = document.querySelectorAll('.language-flow')
-        for (let i = 0, k = flows.length;i < k;i++) {
-          const currentFlow = flows[i]
-          const pre = currentFlow.parentNode
-          const chartBox = document.createElement('div')
-          chartBox.id = 'flow'+i
-          pre.parentNode.replaceChild(chartBox, pre)
-          const code = currentFlow.value || currentFlow.textContent
-          flowchart.parse(code).drawSVG('flow'+i)
-        }
-      }()
-      `.trim()
-        : ""
-    }
     ${JSCode}
     </script>
-    </body>
     </html>
     `);
     iDoc.close();
     return new Promise((resolve) => {
       // 执行用户在写的onload回调函数
-      iWin.onload?.(null);
+      iWin.onload?.();
       this.iframe.onload = () => {
         resolve(() => {});
       };
@@ -108,12 +69,12 @@ class IframeHandler {
    * 向iframe中插入script标签
    * @param {String} JSCode
    */
-  // insertScript (JSCode) {
-  //   const doc = this.iframe.contentWindow.document
-  //   const script = doc.createElement('script')
-  //   script.text = JSCode
-  //   doc.body.appendChild(script)
-  // }
+  insertScript(JSCode:string) {
+    const doc = this.iframe.contentWindow.document;
+    const script = doc.createElement("script");
+    script.text = JSCode;
+    doc.body.appendChild(script);
+  }
 
   /**
    * Render the flowchart in markdown
