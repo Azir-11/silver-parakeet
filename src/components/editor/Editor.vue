@@ -1,39 +1,23 @@
 <template>
-  <div
-    v-if="props.id === 'console'"
-    ref="consoleDom"
-    class="h-full"
-    :style="`width:${props.width}px`"
-    :id="props.id"
-  ></div>
-  <div
-    v-if="props.id === 'editor'"
-    ref="editorDom"
-    class="h-full"
-    :style="`width:${props.width}px`"
-    :id="props.id"
-  ></div>
+  <div ref="editorDom" class="h-full" :style="`width:${props.width}px`"></div>
 </template>
 
 <script lang="ts" setup>
 import { PropType } from "vue";
 import { EditorView, basicSetup } from "codemirror";
 import type { ViewUpdate } from "@codemirror/view";
-import { EditorState, Facet } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
-import { keymap } from "@codemirror/view";
-import { defaultKeymap } from "@codemirror/commands";
 import { LanguageSupport } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
 import { projectTheme } from "./theme/projectTheme";
 import { projectHighlightStyle } from "./theme/projectHighlightStyle";
 
-import { javascript, javascriptLanguage } from "@codemirror/lang-javascript";
+import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
 
 const editorDom = ref<HTMLElement>(null);
 
-const consoleDom = ref<HTMLElement>(null);
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
@@ -93,6 +77,7 @@ function completeFromGlobalScope(context: any) {
   }
   return null;
 }
+
 function completeProperties(from: number, object: Object) {
   let options = [];
   for (let name in object) {
@@ -113,48 +98,29 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
 
 onMounted(() => {
   //初始化实例
-  if (props.id === "editor") {
-    const editor = new EditorView({
-      parent: editorDom.value,
-      state: EditorState.create({
-        doc: props.modelValue,
-        extensions: [
-          // basicSetup 是一套插件集合，包含了很多常用插件
-          basicSetup,
-          props.language,
-          globalJavaScriptCompletions,
-          // oneDarkTheme,
-          projectTheme,
-          syntaxHighlighting(projectHighlightStyle),
-          // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
-          EditorView.updateListener.of((v: ViewUpdate) => {
-            if (props.modelValue != v.state.doc.toString()) {
-              emit("changeCode", v.state.doc.toString());
-            } else {
-              // console.log("数据没更新");
-            }
-          }),
-        ],
-      }),
-    });
-  } else if (props.id === "console") {
-    const console = new EditorView({
-      parent: consoleDom.value,
-      state: EditorState.create({
-        doc: props.modelValue,
-        extensions: [
-          // basicSetup 是一套插件集合，包含了很多常用插件
-          basicSetup,
-          javascript(),
-          globalJavaScriptCompletions,
-          // oneDarkTheme,
-          projectTheme,
-          syntaxHighlighting(projectHighlightStyle),
-          // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
-        ],
-      }),
-    });
-  }
+  const editor = new EditorView({
+    parent: editorDom.value,
+    state: EditorState.create({
+      doc: props.modelValue,
+      extensions: [
+        // basicSetup 是一套插件集合，包含了很多常用插件
+        basicSetup,
+        props.language,
+        globalJavaScriptCompletions,
+        // oneDarkTheme,
+        projectTheme,
+        syntaxHighlighting(projectHighlightStyle),
+        // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
+        EditorView.updateListener.of((v: ViewUpdate) => {
+          if (props.modelValue != v.state.doc.toString()) {
+            emit("changeCode", v.state.doc.toString());
+          } else {
+            // console.log("数据没更新");
+          }
+        }),
+      ],
+    }),
+  });
 });
 </script>
 

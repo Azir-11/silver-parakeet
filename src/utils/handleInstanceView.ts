@@ -29,12 +29,13 @@ class IframeHandler {
    */
   async insertCode(code) {
     const { HTMLCode, CSSCode, JSCode } = code;
-    const iWin :Window = this.iframe.contentWindow;
+    const iWin: Window = this.iframe.contentWindow;
     const iDoc = iWin.document;
     iDoc.open();
     // 在执行js脚本前向iframe注入错误监听回调函数
     iWin.onerror = onerror;
     iWin.onunhandledrejection = onunhandledrejection;
+
     iDoc.write(`
     <!DOCTYPE html>
     <html lang="en">
@@ -69,7 +70,7 @@ class IframeHandler {
    * 向iframe中插入script标签
    * @param {String} JSCode
    */
-  insertScript(JSCode:string) {
+  insertScript(JSCode: string) {
     const doc = this.iframe.contentWindow.document;
     const script = doc.createElement("script");
     script.text = JSCode;

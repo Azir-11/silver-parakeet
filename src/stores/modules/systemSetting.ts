@@ -13,7 +13,6 @@ const {
   appThemeList,
   navMode,
   navTheme,
-  MobileModel,
   headerSetting,
   menuSetting,
   multiTabsSetting,
@@ -36,7 +35,6 @@ interface ProjectSettingState {
   permissionMode: string; //权限模式
   isPageAnimate: boolean; //是否开启路由动画
   pageAnimateType: string; //路由动画类型
-  MobileModel: boolean; // 是否处于移动端模式
 }
 
 export const useSystemSettingStore = defineStore({
@@ -47,7 +45,6 @@ export const useSystemSettingStore = defineStore({
     appThemeList,
     navMode,
     navTheme,
-    MobileModel,
     headerSetting,
     menuSetting,
     multiTabsSetting,
@@ -62,9 +59,6 @@ export const useSystemSettingStore = defineStore({
     },
     getNavTheme(): string {
       return this.navTheme;
-    },
-    getMobileModel(): boolean {
-      return this.MobileModel;
     },
     getHeaderSetting(): object {
       return this.headerSetting;
@@ -91,9 +85,6 @@ export const useSystemSettingStore = defineStore({
   actions: {
     setNavTheme(value: string): void {
       this.navTheme = value;
-    },
-    setMobileModel(value: boolean): void {
-      this.MobileModel = value;
     },
   },
 });

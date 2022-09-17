@@ -1,9 +1,9 @@
 <template>
-  <Editor :width="400" :id="'console'"></Editor>
+  <Editor :width="400" :language="javascript()"></Editor>
 </template>
 
 <script setup lang="ts">
-const consoleDom = ref<string>("consoleDom");
+import { javascript } from "@codemirror/lang-javascript";
 </script>
 
 <style></style>

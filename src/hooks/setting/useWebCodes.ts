@@ -18,7 +18,7 @@ const defultCodeList: Array<codeItem> = [
     }`,
   },
   {
-    mode: "JAVASCRIPT",
+    mode: "JavaScript",
     code: "console.log('hello,world')",
   },
 ];

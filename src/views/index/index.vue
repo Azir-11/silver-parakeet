@@ -4,11 +4,11 @@
       <div class="w-full h-full">
         <Editor
           v-if="index === editorActiveIndex"
+          :id="'editor'"
           :width="editorWidth"
           :language="getLanguage(item)"
           :model-value="editorCode"
           :theme="oneDarkTheme"
-          :id="'editor'"
           @change-code="changeCode"
         />
       </div>
@@ -54,7 +54,7 @@ const getLanguage = (language: string): LanguageSupport => {
   switch (language) {
     case "HTML":
       return html();
-    case "JAVASCRIPT":
+    case "JavaScript":
       return javascript();
     case "CSS":
       return css();

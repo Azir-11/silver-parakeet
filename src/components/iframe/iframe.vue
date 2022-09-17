@@ -3,8 +3,8 @@
     ref="iframeRef"
     :width="`${props.width}px`"
     :height="`${props.height}px`"
+    class="border-none"
     src="/html/instance.html"
-    sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts"
   >
   </iframe>
 </template>
@@ -28,6 +28,7 @@ const props = defineProps({
 });
 
 const webCodes = useWebCodes();
+
 const editorTotalCode: ComputedRef<codeItem> = computed(() => {
   return webCodes.getTotalCode;
 });
