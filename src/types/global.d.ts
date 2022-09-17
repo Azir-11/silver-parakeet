@@ -1,3 +1,7 @@
-declare interface Window {
-    typescript:any;
-}
+interface Window {
+    typescript: any;
+    eval(args:any): any
+    console: Console
+    prettierPlugins:any
+  }
+  

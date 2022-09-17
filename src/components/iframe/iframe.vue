@@ -34,30 +34,21 @@ const editorTotalCode: ComputedRef<codeItem> = computed(() => {
 
 const iframeRef = ref<HTMLIFrameElement>(null);
 const iframeWindows = ref(null);
-let timer;
+let timer, timer2;
 onMounted(() => {
   iframeWindows.value = iframeRef.value.contentWindow;
   runCode(iframeRef.value);
-
   watch(editorTotalCode.value, (_newValue, _oldValue) => {
-    iframeRef.value.src = "/html/instance.html";
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      runCode(iframeRef.value);
-    }, 500);
-  });
+    timer && clearTimeout(timer);
+    timer2 && clearTimeout(timer2);
+    timer2 = setTimeout(() => {
+      timer = setTimeout(() => {
+        iframeRef.value.src = "/html/instance.html";
 
-  // watch(editorTotalCode.value, (_newValue, _oldValue) => {
-  //   iframeRef.value.src = "/html/instance.html";
-  //   clearTimeout(timer);
-  //   timer = setTimeout(() => {
-  //     const script = document.createElement("script");
-  //     script.innerHTML = _newValue[2].code;
-  //     iframeWindows.value.document.head.innerHTML = `<style>${_newValue[1].code}</style>`;
-  //     iframeWindows.value.document.body.innerHTML = _newValue[0].code;
-  //     iframeWindows.value.document.body.appendChild(script);
-  //   }, 500);
-  // });
+        runCode(iframeRef.value);
+      }, 100);
+    }, 100);
+  });
 });
 
 const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
@@ -65,7 +56,6 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   let HTMLCode = editorTotalCode.value[0].code,
     CSSCode = editorTotalCode.value[1].code,
     JSCode = editorTotalCode.value[2].code;
-
   if (webCodes.getIndex <= 2) {
     await compileHTML(HTMLCode, "0").then((res: string) => {
       HTMLCode = res;
@@ -77,8 +67,9 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
       JSCode = res;
     });
   }
-
-  IframesHandler.insertCode({ HTMLCode, CSSCode, JSCode });
+  setTimeout(async () => {
+    await IframesHandler.insertCode({ HTMLCode, CSSCode, JSCode });
+  }, 200);
 };
 </script>
 

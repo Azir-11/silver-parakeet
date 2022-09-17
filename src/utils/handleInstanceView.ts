@@ -29,7 +29,7 @@ class IframeHandler {
    */
   async insertCode(code) {
     const { HTMLCode, CSSCode, JSCode } = code;
-    const iWin = this.iframe.contentWindow;
+    const iWin :Window = this.iframe.contentWindow;
     const iDoc = iWin.document;
     iDoc.open();
     // 在执行js脚本前向iframe注入错误监听回调函数
@@ -57,7 +57,7 @@ class IframeHandler {
     iDoc.close();
     return new Promise((resolve) => {
       // 执行用户在写的onload回调函数
-      iWin.onload?.();
+      iWin.onload?.(null);
       this.iframe.onload = () => {
         resolve(() => {});
       };

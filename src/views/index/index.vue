@@ -8,13 +8,16 @@
           :language="getLanguage(item)"
           :model-value="editorCode"
           :theme="oneDarkTheme"
+          :id="'editor'"
           @change-code="changeCode"
         />
       </div>
     </div>
     <div class="w-full">
       <Iframe class="bg-white" :width="resultBoxWidth"></Iframe>
-      <div class="console"></div>
+      <div class="console">
+        <Console></Console>
+      </div>
     </div>
   </section>
 </template>

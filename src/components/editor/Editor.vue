@@ -1,5 +1,18 @@
 <template>
-  <div ref="editorDom" class="h-full" :style="`width:${props.width}px`"></div>
+  <div
+    v-if="props.id === 'console'"
+    ref="consoleDom"
+    class="h-full"
+    :style="`width:${props.width}px`"
+    :id="props.id"
+  ></div>
+  <div
+    v-if="props.id === 'editor'"
+    ref="editorDom"
+    class="h-full"
+    :style="`width:${props.width}px`"
+    :id="props.id"
+  ></div>
 </template>
 
 <script lang="ts" setup>
@@ -15,11 +28,12 @@ import { syntaxHighlighting } from "@codemirror/language";
 import { projectTheme } from "./theme/projectTheme";
 import { projectHighlightStyle } from "./theme/projectHighlightStyle";
 
-import { javascriptLanguage } from "@codemirror/lang-javascript";
+import { javascript, javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
 
-const editorDom = ref(null);
+const editorDom = ref<HTMLElement>(null);
 
+const consoleDom = ref<HTMLElement>(null);
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
@@ -40,6 +54,10 @@ const props = defineProps({
   width: {
     type: Number,
     default: 600,
+  },
+  id: {
+    type: String,
+    default: "editor",
   },
 });
 
@@ -95,29 +113,48 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
 
 onMounted(() => {
   //初始化实例
-  const editor = new EditorView({
-    parent: editorDom.value,
-    state: EditorState.create({
-      doc: props.modelValue,
-      extensions: [
-        // basicSetup 是一套插件集合，包含了很多常用插件
-        basicSetup,
-        props.language,
-        globalJavaScriptCompletions,
-        // oneDarkTheme,
-        projectTheme,
-        syntaxHighlighting(projectHighlightStyle),
-        // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
-        EditorView.updateListener.of((v: ViewUpdate) => {
-          if (props.modelValue != v.state.doc.toString()) {
-            emit("changeCode", v.state.doc.toString());
-          } else {
-            // console.log("数据没更新");
-          }
-        }),
-      ],
-    }),
-  });
+  if (props.id === "editor") {
+    const editor = new EditorView({
+      parent: editorDom.value,
+      state: EditorState.create({
+        doc: props.modelValue,
+        extensions: [
+          // basicSetup 是一套插件集合，包含了很多常用插件
+          basicSetup,
+          props.language,
+          globalJavaScriptCompletions,
+          // oneDarkTheme,
+          projectTheme,
+          syntaxHighlighting(projectHighlightStyle),
+          // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
+          EditorView.updateListener.of((v: ViewUpdate) => {
+            if (props.modelValue != v.state.doc.toString()) {
+              emit("changeCode", v.state.doc.toString());
+            } else {
+              // console.log("数据没更新");
+            }
+          }),
+        ],
+      }),
+    });
+  } else if (props.id === "console") {
+    const console = new EditorView({
+      parent: consoleDom.value,
+      state: EditorState.create({
+        doc: props.modelValue,
+        extensions: [
+          // basicSetup 是一套插件集合，包含了很多常用插件
+          basicSetup,
+          javascript(),
+          globalJavaScriptCompletions,
+          // oneDarkTheme,
+          projectTheme,
+          syntaxHighlighting(projectHighlightStyle),
+          // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
+        ],
+      }),
+    });
+  }
 });
 </script>
 

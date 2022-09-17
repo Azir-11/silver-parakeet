@@ -1,119 +1,170 @@
-import { judgeBaseArray, judgeType, judgeWindow, JSONStringify, judgeCyclic, stringifyDOM } from './tools'
-import { simpleFormat } from './codeFormatter'
+import {
+  judgeBaseArray,
+  judgeType,
+  judgeWindow,
+  JSONStringify,
+  judgeCyclic,
+  stringifyDOM,
+} from "./tools/tool";
+import { simpleFormat } from "./codeFormatter";
 
 const highlightMap = {
-  string: 'cm-string',
-  number: 'cm-number',
-  bigint: 'cm-none',
-  boolean: 'cm-atom',
-  symbol: 'cm-variable',
-  null: 'cm-none',
-  undefined: 'cm-none',
+  string: "cm-string",
+  number: "cm-number",
+  bigint: "cm-none",
+  boolean: "cm-atom",
+  symbol: "cm-variable",
+  null: "cm-none",
+  undefined: "cm-none",
+};
+
+interface consoleinfo {
+  type?: string;
+  logs?: string | string[];
+  content?: string | string[];
 }
 
-export default class Console {
-  constructor(iframe) {
-    if (!Console.instance) {
-      this.window = iframe.contentWindow
-      this.console = this.window.console
-      this.consoleInfo = []
-      this.timerMap = new Map()
-      this.init()
-      Console.instance = this
+interface ConsoleInstance {
+  window: Window;
+  console: Console;
+  consoleInfo: consoleinfo[];
+  timerMap: Map<string, number>;
+  consoleMethods: string[];
+  ableMethods: string[];
+  init(): void;
+  clear(): void;
+  getLogs(): consoleinfo[];
+  refresh(iframe: HTMLIFrameElement): void;
+  exeCmd(cmd: string): any;
+  setTimer(name: string): void;
+  getTimer(name: string): string;
+  calcTime(name: string): string;
+  print(item: consoleinfo): consoleinfo;
+  contentToString(content: any): string;
+  log(content: any): any;
+}
+
+export default class Consoles {
+  static instance: ConsoleInstance;
+  window: Window;
+  console: Console;
+  consoleInfo: consoleinfo[];
+  timerMap: Map<string, number>;
+  consoleMethods: string[];
+  ableMethods: string[];
+  constructor(iframe: HTMLIFrameElement) {
+    if (!Consoles.instance) {
+      this.window = iframe.contentWindow;
+      this.console = this.window.console;
+      this.consoleInfo = [];
+      this.timerMap = new Map();
+      this.init();
+      Consoles.instance = this;
     }
-    return Console.instance
+    return Consoles.instance;
   }
   /**
    * 初始化控制台各个可用方法
    */
-  init () {
-    this.consoleMethods = ['log', 'info', 'warn', 'error', 'assert', 'dir', 'debug', 'time', 'timeLog', 'timeEnd', 'clear']
-    this.ableMethods = ['log', 'dir', 'info', 'warn', 'error', 'assert']
-    const consoleInfo = this.consoleInfo
-    const iframeConsole = this.console
+  init() {
+    this.consoleMethods = [
+      "log",
+      "info",
+      "warn",
+      "error",
+      "assert",
+      "dir",
+      "debug",
+      "time",
+      "timeLog",
+      "timeEnd",
+      "clear",
+    ];
+    this.ableMethods = ["log", "dir", "info", "warn", "error", "assert"];
+    const consoleInfo = this.consoleInfo;
+    const iframeConsole = this.console;
     // this.window.exeJSEncoderConsoleCmd = cmd => Function(`return (${cmd})`)()
     this.consoleMethods.forEach((item) => {
       iframeConsole[item] = (...arg) => {
-        console[item](...arg) // 在浏览器控制台打印日志
+        console[item](...arg); // 在浏览器控制台打印日志
         switch (item) {
-          case 'time':
-            this.setTimer(arg[0])
-            break
-          case 'timeLog':
-          case 'timeEnd': {
-            const time = this.calcTime(arg[0])
-            const domClass = time ? highlightMap.number : highlightMap.undefined
-            const finContent = `<span class="${domClass}">${time}</span>`
+          case "time":
+            this.setTimer(arg[0]);
+            break;
+          case "timeLog":
+          case "timeEnd": {
+            const time = this.calcTime(arg[0]);
+            const domClass = time ? highlightMap.number : highlightMap.undefined;
+            const finContent = `<span class="${domClass}">${time}</span>`;
             consoleInfo.push({
-              type: 'log',
+              type: "log",
               logs: [finContent],
-            })
-            break
+            });
+            break;
           }
-          case 'clear': {
-            this.clear()
-            break
+          case "clear": {
+            this.clear();
+            break;
           }
-          case 'assert': {
-            const result = this.window.eval(arg.splice(0, 1)[0])
+          case "assert": {
+            const result = this.window.eval(arg.splice(0, 1)[0]);
             if (!result) {
               const finLog = this.print({
-                type: 'log',
+                type: "log",
                 content: arg,
-              })
-              finLog.type = 'error'
-              finLog.content = `Assertion failed: ${finLog.content}`
-              consoleInfo.push(finLog)
+              });
+              finLog.type = "error";
+              finLog.content = `Assertion failed: ${finLog.content}`;
+              consoleInfo.push(finLog);
             }
-            break
+            break;
           }
           default: {
             // 先判断参数中是否含有global或window
-            let haveLargeOb = false
+            let haveLargeOb = false;
             arg.forEach((item) => {
               if (judgeWindow(item)) {
                 consoleInfo.push({
-                  type: 'error',
-                  content:
-                    'Sorry, this log was too large for our console. You might need to use the browser console instead.',
-                })
-                haveLargeOb = true
+                  type: "error",
+                  content: "我测,你把window/global打印在我的小控制台上？自己康浏览器的控制台把",
+                });
+                haveLargeOb = true;
               }
-            })
-            if (haveLargeOb) return void 0
+            });
+            if (haveLargeOb) return void 0;
             const finLog = this.print({
               type: item,
               content: arg,
-            })
-            consoleInfo.push(finLog)
+            });
+            consoleInfo.push(finLog);
           }
         }
-      }
-    })
+      };
+    });
   }
   /**
    * 清除控制台所有日志
    */
-  clear () {
-    const consoleInfo = this.consoleInfo
-    consoleInfo.splice(0, consoleInfo.length, '')
-    consoleInfo.pop()
+  clear() {
+    const consoleInfo = this.consoleInfo;
+    consoleInfo.splice(0, consoleInfo.length);
+    consoleInfo.pop();
   }
   /**
    * 获取日志列表
    * @returns {Array}
    */
-  getLogs () {
-    return this.consoleInfo
+  getLogs() {
+    return this.consoleInfo;
   }
   /**
    * 刷新控制台，因为执行代码时需要先将iframe重新载入，重新载入iframe需要重新做一次constructor中的操作
    */
-  refresh (iframe) {
-    this.window = iframe.contentWindow
-    this.console = this.window.console
-    this.timerMap = new Map()
-    this.init()
+  refresh(iframe) {
+    this.window = iframe.contentWindow;
+    this.console = this.window.console;
+    this.timerMap = new Map();
+    this.init();
   }
   /**
    * 执行console手动输入指令
@@ -123,70 +174,71 @@ export default class Console {
    * 最后输出命令的返回值
    * @param {String} cmd
    */
-  exeCmd (cmd) {
-    let result
-    this.console.log(cmd)
+  exeCmd(cmd) {
+    let result: any;
+    this.console.log(cmd);
     try {
       // if (/^(let|const)+( )/.test(cmd)) {
       //   result = this.window.eval(cmd)
       // } else {
       //   result = this.window.exeJSEncoderConsoleCmd(cmd)
       // }
-      if (cmd === 'window' || cmd === 'console') {
+      if (cmd === "window" || cmd === "console") {
         this.consoleInfo.push({
-          type: 'error',
-          content: 'Sorry, this log was too large for our console. You might need to use the browser console instead.',
-        })
-        console.log(this.window.eval(cmd))
-        return void 0
+          type: "error",
+          content:
+            "Sorry, this log was too large for our console. You might need to use the browser console instead.",
+        });
+        console.log(this.window.eval(cmd));
+        return void 0;
       }
-      result = this.window.eval(`let x=(${cmd});x`)
+      result = this.window.eval(`let x=(${cmd});x`);
     } catch (err) {
       try {
-        this.window.eval(cmd)
+        this.window.eval(cmd);
       } catch (err) {
         this.consoleInfo.push({
-          type: 'error',
+          type: "error",
           content: err,
-        })
-        return void 0
+        });
+        return void 0;
       }
     }
-    console.log(result)
+    console.log(result);
     const log = this.print({
-      type: 'print',
+      type: "print",
       content: [result],
-    })
-    log.type === 'mix' && (log.type = 'mixPrint')
-    this.consoleInfo.push(log)
+    });
+    log.type === "mix" && (log.type = "mixPrint");
+    this.consoleInfo.push(log);
   }
   /**
    * 设置计时器，如果该计时器已存在就不做操作
    * @param {String} name 计时器名称
    */
-  setTimer (name) {
-    const timerMap = this.timerMap
-    if (timerMap.get(name)) return void 0
-    timerMap.set(name, performance.now())
+  setTimer(name: string) {
+    const timerMap = this.timerMap;
+    if (timerMap.get(name)) return void 0;
+    timerMap.set(name, performance.now());
   }
   /**
    * @param {String} name 计时器名称
    * @returns {Number}
    */
-  getTimer (name) {
-    const time = this.calcTime(name)
-    this.timerMap.delete(name)
-    return time
+  getTimer(name) {
+    const time = this.calcTime(name);
+    this.timerMap.delete(name);
+    return time;
   }
   /**
    * 计算时间，如果不存在该计时器，返回undefined
    * @param {String} name 计时器名称
    * @returns {Number} time 时间差
    */
-  calcTime (name) {
-    const time = this.timerMap.get(name)
-    if (!time) return void 0
-    return `${name}: ${performance.now() - time} ms`
+  calcTime(name) {
+    const time = this.timerMap.get(name);
+    if (!time) return void 0;
+    return `${name}: ${performance.now() - time} ms`;
   }
   /**
    * 生成日志
@@ -197,43 +249,43 @@ export default class Console {
    * @param {Array} content 日志内容
    * @returns {Object} finLog 最终显示在页面上的日志信息
    */
-  print (item) {
-    let { type, content } = item
-    if (!(this.ableMethods.indexOf(type) >= 0) && type !== 'print') {
+  print(item: consoleinfo): consoleinfo {
+    let { type, content } = item;
+    if (!(this.ableMethods.indexOf(type) >= 0) && type !== "print") {
       return {
-        type: 'warn',
+        type: "warn",
         content: `console.${type} is not supported in this console, please use the browser console for debugging!`,
-      }
+      };
     }
-    let finLog = {}
+    let finLog = {};
     switch (type) {
-      case 'log':
-      case 'dir':
-      case 'print':
+      case "log":
+      case "dir":
+      case "print":
         if (!judgeBaseArray(content)) {
-          content = simpleFormat(this.contentToString(content))
+          content = simpleFormat(this.contentToString(content));
           finLog = {
-            type: 'mix',
+            type: "mix",
             content,
-          }
+          };
         } else {
           finLog = {
             type,
             logs: this.log(content),
-          }
+          };
         }
-        break
-      case 'info':
-      case 'warn':
-      case 'error': {
-        content = simpleFormat(this.contentToString(content))
+        break;
+      case "info":
+      case "warn":
+      case "error": {
+        content = simpleFormat(this.contentToString(content));
         finLog = {
           type,
           content,
-        }
+        };
       }
     }
-    return finLog
+    return finLog;
   }
   /**
    * 将log内容转换成字符串
@@ -241,84 +293,86 @@ export default class Console {
    * @param {Array} content
    * @returns {String}
    */
-  contentToString (content) {
-    let result = ''
-    const length = content.length
-    const afterStr = ' '
+  contentToString(content) {
+    let result = "";
+    const length = content.length;
+    const afterStr = " ";
     content.forEach((item, index) => {
-      let type = judgeType(item)
-      if (/^HTML/.test(type) && type !== 'HTMLCollection') type = 'dom'
+      let type = judgeType(item);
+      if (/^HTML/.test(type) && type !== "HTMLCollection") type = "dom";
       switch (type) {
-        case 'null':
-        case 'undefined':
-        case 'symbol':
-        case 'number':
-        case 'boolean':
-        case 'function':
-          result += String(item)
-          if (index !== length - 1) result += afterStr
-          break
-        case 'string':
-          result = `${result}"${String(item)}"`
-          if (index !== length - 1) result += afterStr
-          break
-        case 'bigint':
-          result += `${item.toString()}n`
-          if (index !== length - 1) result += afterStr
-          break
-        case 'String':
-        case 'Number':
-        case 'Boolean':
-          if (type === 'String') item = `"${item}"`
-          result = `${result}${type}{${item}}`
-          if (index !== length - 1) result += afterStr
-          break
-        case 'Array':
-        case 'Map':
-        case 'Set':
-        case 'Error':
-        case 'Date':
-        case 'RegExp':
-        case 'Object':
+        case "null":
+        case "undefined":
+        case "symbol":
+        case "number":
+        case "boolean":
+        case "function":
+          result += String(item);
+          if (index !== length - 1) result += afterStr;
+          break;
+        case "string":
+          result = `${result}"${String(item)}"`;
+          if (index !== length - 1) result += afterStr;
+          break;
+        case "bigint":
+          result += `${item.toString()}n`;
+          if (index !== length - 1) result += afterStr;
+          break;
+        case "String":
+        case "Number":
+        case "Boolean":
+          if (type === "String") item = `"${item}"`;
+          result = `${result}${type}{${item}}`;
+          if (index !== length - 1) result += afterStr;
+          break;
+        case "Array":
+        case "Map":
+        case "Set":
+        case "Error":
+        case "Date":
+        case "RegExp":
+        case "Object":
           if (judgeCyclic(item)) {
-            result = 'JSEncoder Tip: "There is a circular reference in the output variable, please view the full log in the browser console."'
+            result =
+              'JSEncoder Tip: "There is a circular reference in the output variable, please view the full log in the browser console."';
           } else {
-            result = result + JSONStringify(item) + afterStr
+            result = result + JSONStringify(item) + afterStr;
           }
-          break
-        case 'dom':
-          result = result + stringifyDOM(item)
-          break
-        case 'HTMLCollection':
-          for (let i = 0;i < item.length;i++) {
-            result = result + stringifyDOM(item[i]) + '\n'
+          break;
+        case "dom":
+          result = result + stringifyDOM(item);
+          break;
+        case "HTMLCollection":
+          for (let i = 0; i < item.length; i++) {
+            result = result + stringifyDOM(item[i]) + "\n";
           }
-          break
+          break;
         default:
-          result = 'JSEncoder Tip: "We do not support the display of this data type at this time, if you want to help us, please fork our project on Github."'
+          result =
+            'JSEncoder Tip: "We do not support the display of this data type at this time, if you want to help us, please fork our project on Github."';
       }
-    })
-    return result
+    });
+    return result;
   }
   /**
    * 生成带有log的html字符串
    * @param {Array} content 输出内容
    * @returns {Array} finLog 最终显示在页面上的日志
    */
-  log (content) {
-    const result = []
-    if (!content.length) return ''
+  log(content) {
+    const result = [];
+    if (!content.length) return "";
     content.forEach((item) => {
-      const type = judgeType(item)
-      if (type === 'symbol') {
-        item = String(item)
-      } else if (type === 'bigint') {
-        item = `${item.toString()}n`
+      const type = judgeType(item);
+      if (type === "symbol") {
+        item = String(item);
+      } else if (type === "bigint") {
+        item = `${item.toString()}n`;
       }
-      const domClass = highlightMap[type]
-      const html = `<span class="${domClass}">${item}</span>`
-      result.push(html)
-    })
-    return result
+      const domClass = highlightMap[type];
+      const html = `<span class="${domClass}">${item}</span>`;
+      result.push(html);
+    });
+    return result;
   }
 }
