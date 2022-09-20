@@ -98,6 +98,7 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
 
 onMounted(() => {
   //初始化实例
+  console.log(props.theme);
   const editor = new EditorView({
     parent: editorDom.value,
     state: EditorState.create({
@@ -108,7 +109,7 @@ onMounted(() => {
         props.language,
         globalJavaScriptCompletions,
         // oneDarkTheme,
-        projectTheme,
+        props.theme,
         syntaxHighlighting(projectHighlightStyle),
         // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
         EditorView.updateListener.of((v: ViewUpdate) => {

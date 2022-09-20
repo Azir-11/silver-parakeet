@@ -16,7 +16,7 @@
     <div class="w-full">
       <Iframe class="bg-white" :width="resultBoxWidth"></Iframe>
       <div class="console">
-        <Console></Console>
+        <Console :width="resultBoxWidth"></Console>
       </div>
     </div>
   </section>
