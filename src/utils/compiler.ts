@@ -6,7 +6,7 @@ import Loader from "./loader";
 import { externalLinks } from "./cdn";
 import hash from "hash-sum";
 import { firstUpper } from "./tools/tool";
-
+import parserMarkdown from "prettier/parser-markdown";
 const loader = new Loader();
 
 async function compileMarkdown(code) {
@@ -18,7 +18,7 @@ async function compileMarkdown(code) {
     highlightJS = loader.get("highlight");
   }
   if (!loader.get("markdown")) {
-    marked = require("marked");
+    marked = parserMarkdown;
     loader.set("markdown", marked);
   } else {
     marked = loader.get("markdown");
@@ -39,33 +39,33 @@ async function compileMarkdown(code) {
   });
   return marked(code);
 }
-function compilePug(code) {
-  let pug;
-  if (!loader.get("pug")) {
-    pug = require("pug");
-    loader.set("pug", pug);
-  } else {
-    pug = loader.get("pug");
-  }
-  return pug.compile(code)({});
-}
-async function compileSass(code: string) {
-  // scss&sass
-  let sass;
-  if (!loader.get("sass")) {
-    sass = require("../../public/js/compiler/sass");
-    sass.setWorkerUrl(`../../public/js/compiler/sass.worker.js`);
-    loader.set("sass", sass);
-  } else {
-    sass = loader.get("sass");
-  }
-  return new Promise((resolve) => {
-    new sass().compile(code, (result) => {
-      if (result.status === 0) resolve(result.text);
-      else resolve(code);
-    });
-  });
-}
+// function compilePug(code) {
+//   let pug;
+//   if (!loader.get("pug")) {
+//     pug = parserPug;
+//     loader.set("pug", pug);
+//   } else {
+//     pug = loader.get("pug");
+//   }
+//   return pug.compile(code)({});
+// }
+// async function compileSass(code: string) {
+//   // scss&sass
+//   let sassjs;
+//   if (!loader.get("sass")) {
+//     sassjs = sass;
+//     sassjs.setWorkerUrl(`../../public/js/sass.worker.js`);
+//     loader.set("sass", sass);
+//   } else {
+//     sassjs = loader.get("sass");
+//   }
+//   return new Promise((resolve) => {
+//     (new sass() as any).compile(code, (result) => {
+//       if (result.status === 0) resolve(result.text);
+//       else resolve(code);
+//     });
+//   });
+// }
 async function compileLess(code: string) {
   let less;
   if (!loader.get("less")) {
@@ -104,9 +104,9 @@ async function compileHTML(code, prep) {
           console.log(err);
         });
       break;
-    case "Pug":
-      code = compilePug(code);
-      break;
+    // case "Pug":
+    //   code = compilePug(code);
+    //   break;
   }
   return code;
 }
@@ -121,16 +121,16 @@ async function compileCSS(code, prep): Promise<string> {
           console.log(err);
         });
       break;
-    case "Sass":
-    case "Scss":
-      await compileSass(code)
-        .then((res) => {
-          code = res;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      break;
+    // case "Sass":
+    // case "Scss":
+    //   await compileSass(code)
+    //     .then((res) => {
+    //       code = res;
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    //   break;
   }
   return code;
 }
@@ -152,7 +152,7 @@ async function compileJS(code, prep) {
 async function compileVue2(code) {
   let vue;
   if (!loader.get("vue")) {
-    vue = require("@vue/compiler-sfc");
+    vue = 
     loader.set("vue", vue);
   } else {
     vue = loader.get("vue");

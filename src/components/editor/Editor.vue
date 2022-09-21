@@ -6,9 +6,9 @@
 import { PropType } from "vue";
 import { EditorView, basicSetup } from "codemirror";
 import type { ViewUpdate } from "@codemirror/view";
-import { EditorState } from "@codemirror/state";
+import { EditorState, Facet } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
-import { LanguageSupport } from "@codemirror/language";
+import { foldAll, LanguageSupport } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
 import { projectTheme } from "./theme/projectTheme";
 import { projectHighlightStyle } from "./theme/projectHighlightStyle";
@@ -39,9 +39,9 @@ const props = defineProps({
     type: Number,
     default: 600,
   },
-  id: {
-    type: String,
-    default: "editor",
+  isEditable: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -98,7 +98,6 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
 
 onMounted(() => {
   //初始化实例
-  console.log(props.theme);
   const editor = new EditorView({
     parent: editorDom.value,
     state: EditorState.create({
@@ -119,9 +118,13 @@ onMounted(() => {
             // console.log("数据没更新");
           }
         }),
+        EditorView.editable.of(props.isEditable),
       ],
     }),
   });
+  if (!props.isEditable) {
+    foldAll(editor);
+  }
 });
 </script>
 

@@ -13,9 +13,11 @@
 import { useWebCodes } from "@/hooks/setting/useWebCodes";
 import type { codeItem } from "@/hooks/setting/useWebCodes";
 import { ComputedRef } from "vue";
+import { useConsole } from "@/hooks/setting/useConsole";
 import IframeHandler from "@/utils/handleInstanceView";
 import { compileHTML, compileJS, compileCSS } from "@/utils/compiler";
-
+import Consoles from "@/utils/console";
+import { format } from "@/utils/codeFormatter";
 const props = defineProps({
   width: {
     type: Number,
@@ -54,6 +56,8 @@ onMounted(() => {
 
 const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   const IframesHandler = new IframeHandler(iframe);
+  const IframeConsole = new Consoles(iframe);
+  useConsole().setConsoleInfo([]);
   let HTMLCode = editorTotalCode.value[0].code,
     CSSCode = editorTotalCode.value[1].code,
     JSCode = editorTotalCode.value[2].code;
@@ -61,7 +65,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
     await compileHTML(HTMLCode, "0").then((res: string) => {
       HTMLCode = res;
     });
-    await compileCSS(CSSCode, "0").then((res: string) => {
+    await compileCSS(format(CSSCode, "CSS"), "0").then((res: string) => {
       CSSCode = res;
     });
     await compileJS(JSCode, "0").then((res: string) => {
@@ -69,7 +73,10 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
     });
   }
   setTimeout(async () => {
+    IframeConsole.clear();
+    IframeConsole.refresh(iframe);
     await IframesHandler.insertCode({ HTMLCode, CSSCode, JSCode });
+    useConsole().setConsoleInfo(IframeConsole.getLogs());
   }, 200);
 };
 </script>

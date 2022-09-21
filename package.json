@@ -20,7 +20,8 @@
     "@codemirror/theme-one-dark": "^6.0.0",
     "@codemirror/view": "^6.2.0",
     "@lezer/highlight": "^1.0.0",
-    "@prettier/plugin-pug": "^2.2.0",
+    "@types/js-beautify": "^1.13.3",
+    "@types/prettier": "^2.7.0",
     "@vicons/ionicons5": "^0.12.0",
     "@vue/compiler-sfc": "^3.2.39",
     "acorn": "^8.8.0",
@@ -31,6 +32,7 @@
     "estraverse": "5.2.0",
     "hash-sum": "^2.0.0",
     "highlight.js": "^11.6.0",
+    "js-beautify": "^1.14.6",
     "less": "^4.1.2",
     "less-loader": "7.x",
     "naive-ui": "^2.26.4",
@@ -45,6 +47,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
+    "@prettier/plugin-pug": "^2.2.0",
     "@types/hash-sum": "^1.0.0",
     "@types/node": "^16.11.25",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
@@ -64,6 +67,7 @@
     "unplugin-auto-import": "^0.11.2",
     "vite": "^3.0.1",
     "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-require-transform": "^1.0.3",
     "vue-tsc": "^0.31.4"
   }
 }

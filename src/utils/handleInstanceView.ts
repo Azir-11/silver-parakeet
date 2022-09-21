@@ -33,9 +33,6 @@ class IframeHandler {
     const iDoc = iWin.document;
     iDoc.open();
     // 在执行js脚本前向iframe注入错误监听回调函数
-    iWin.onerror = onerror;
-    iWin.onunhandledrejection = onunhandledrejection;
-
     iDoc.write(`
     <!DOCTYPE html>
     <html lang="en">

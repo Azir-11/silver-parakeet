@@ -52,7 +52,7 @@ export default class Consoles {
   timerMap: Map<string, number>;
   consoleMethods: string[];
   ableMethods: string[];
-  constructor(iframe: HTMLIFrameElement) {
+  constructor(iframe?: HTMLIFrameElement) {
     if (!Consoles.instance) {
       this.window = iframe.contentWindow;
       this.console = this.window.console;
@@ -155,6 +155,7 @@ export default class Consoles {
    * @returns {Array}
    */
   getLogs() {
+    console.log(this.consoleInfo);
     return this.consoleInfo;
   }
   /**

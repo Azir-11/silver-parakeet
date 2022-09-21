@@ -66,7 +66,9 @@ export const consoleTheme = EditorView.theme({
     backgroundColor: "#282c34",
     color: "#535773",
     border: "none",
-    display:"none"
+  },
+  ".cm-lineNumbers":{
+    display:"none !important"
   },
   // 选中的行号
   ".cm-activeLineGutter": {

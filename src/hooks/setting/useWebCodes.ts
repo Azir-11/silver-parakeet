@@ -19,7 +19,7 @@ const defultCodeList: Array<codeItem> = [
   },
   {
     mode: "JavaScript",
-    code: "console.log('hello,world')",
+    code: "console.log('hello,world') \n const a={name:'123', \n name:'456'} \n console.log(a)",
   },
 ];
 

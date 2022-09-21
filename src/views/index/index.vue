@@ -1,9 +1,8 @@
 <template>
   <section class="editorBox flex w-full h-full pt-1 box-border">
     <div v-for="(item, index) in editorModes" :key="index">
-      <div class="w-full h-full">
+      <div class="w-full h-full" v-if="index === editorActiveIndex">
         <Editor
-          v-if="index === editorActiveIndex"
           :id="'editor'"
           :width="editorWidth"
           :language="getLanguage(item)"
@@ -13,7 +12,7 @@
         />
       </div>
     </div>
-    <div class="w-full">
+    <div class="w-full h-full pl-3">
       <Iframe class="bg-white" :width="resultBoxWidth"></Iframe>
       <div class="console">
         <Console :width="resultBoxWidth"></Console>
