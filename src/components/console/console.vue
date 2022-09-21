@@ -9,13 +9,12 @@
         :model-value="typeof item.content === 'string' ? item.content : ''"
       ></Editor>
     </div>
-
     <div v-if="item.type === 'log'" v-html="item.logs"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { consoleinfo } from "@/utils/console";
+import type { consoleinfo } from "@/utils/console";
 import { useConsole } from "@/hooks/setting/useConsole";
 import { javascript } from "@codemirror/lang-javascript";
 import { consoleTheme } from "../../components/editor/theme/projectTheme";

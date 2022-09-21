@@ -4,12 +4,12 @@
       <div class="flex items-center">
         <div class="hoverBtn" @click="changeCollapsed">
           <n-icon :size="size">
-            <MenuOutline />
+            <MenuOutline :color="'#fff'" />
           </n-icon>
         </div>
         <div class="hoverBtn">
           <n-icon :size="size">
-            <ReloadOutline />
+            <ReloadOutline :color="'#fff'" />
           </n-icon>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <template #trigger>
           <div class="hoverBtn" @click="openSetting">
             <n-icon :size="size">
-              <SettingsOutline />
+              <SettingsOutline :color="'#fff'" />
             </n-icon></div></template
         ><span>项目配置</span></n-tooltip
       >

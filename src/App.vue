@@ -1,8 +1,8 @@
 <template>
   <n-config-provider
     :locale="zhCN"
-    :theme="theme"
-    :theme-overrides="getDarkTheme"
+    :theme="darkTheme"
+    :theme-overrides="darkTheme"
     :date-locale="dateZhCN"
   >
     <AppProvider>
@@ -15,19 +15,6 @@
 import { AppProvider } from "@/components/Application";
 import Layout from "@/Layout/index.vue";
 import { zhCN, dateZhCN, darkTheme } from "naive-ui";
-import { useSystemSettingStore } from "@/stores/modules/systemSetting";
-
-const systemStore = useSystemSettingStore();
-
-const darkThemeOverrides = {
-  common: {
-    baseColor: "#282c34",
-  },
-};
-
-const theme = null;
-
-const getDarkTheme = computed(() => (systemStore.darkTheme ? darkTheme : undefined));
 </script>
 
 <style>

@@ -18,7 +18,7 @@ const highlightMap = {
   undefined: "cm-none",
 };
 
-interface consoleinfo {
+export interface consoleinfo {
   type?: string;
   logs?: string | string[];
   content?: string | string[];

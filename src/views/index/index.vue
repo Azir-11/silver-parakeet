@@ -1,7 +1,7 @@
 <template>
   <section class="editorBox flex w-full h-full pt-1 box-border">
     <div v-for="(item, index) in editorModes" :key="index">
-      <div class="w-full h-full" v-if="index === editorActiveIndex">
+      <div v-if="index === editorActiveIndex" class="w-full h-full">
         <Editor
           :id="'editor'"
           :width="editorWidth"

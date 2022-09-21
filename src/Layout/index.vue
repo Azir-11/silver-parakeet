@@ -4,14 +4,14 @@
       <n-layout-header
         position="absolute"
         :style="`height:${headerHeight}px`"
-        class="border-solid border-0 border-b border-gray-200"
+        class="border-solid border-0 border-b border-gray-200 bg-baseBg"
       >
         <PageHeader @update:collapsed="changeCollapsed" />
       </n-layout-header>
       <n-layout-content
         position="absolute"
         :style="`top:${headerHeight}px`"
-        :class="{ 'bg-gray-100': getDarkTheme === false }"
+        :class="{ 'bg-baseBg': getDarkTheme === false }"
         has-sider
       >
         <n-layout-sider
@@ -25,7 +25,7 @@
           :collapsed-width="49"
           :width="200"
           :native-scrollbar="false"
-          class="shadow-xl"
+          class="shadow-xl bg-baseBg"
           style="max-height: 100vh"
         >
           <AsideMenu />
@@ -34,7 +34,7 @@
           <n-scrollbar>
             <div
               class="pl-12"
-              :class="{ 'bg-white': getDarkTheme === false }"
+              :class="{ 'bg-baseBg': getDarkTheme === false }"
               :style="`height:${tabsHeight}px;`"
             >
               <div class="w-1/4">
@@ -44,12 +44,6 @@
             <div class="box-border overflow-auto" :style="`height:${mainHeight}px`">
               <Main />
             </div>
-            <n-layout-footer
-              :style="`height: ${footerHeight}px`"
-              class="border-solid border-0 border-t border-gray-200"
-              :class="{ 'bg-white': getDarkTheme === false }"
-              ><PageFooter
-            /></n-layout-footer>
           </n-scrollbar>
         </section>
       </n-layout-content>
@@ -61,7 +55,6 @@
 import { AsideMenu } from "./components/Menu";
 import { PageHeader } from "./components/Header";
 import { TabsView } from "./components/Tab";
-import { PageFooter } from "./components/Footer";
 import Main from "@/views/index/index.vue";
 import { useSystemSetting } from "@/hooks/setting/useSystemSetting";
 
