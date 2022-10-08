@@ -12,10 +12,12 @@
         />
       </div>
     </div>
-    <div class="w-full h-full pl-3">
-      <Iframe class="bg-white" :width="resultBoxWidth"></Iframe>
-      <div class="console">
-        <Console :width="resultBoxWidth"></Console>
+    <div ref="aSideRef" class="w-full h-full pl-3">
+      <Iframe ref="iframeRef" class="bg-white" :width="resultBoxWidth"></Iframe>
+      <div class="console" :style="{ height: consoleHeight + 'px' }">
+        <n-scrollbar>
+          <Console :width="resultBoxWidth"></Console>
+        </n-scrollbar>
       </div>
     </div>
   </section>
@@ -29,7 +31,9 @@ import { javascript } from "@codemirror/lang-javascript";
 
 import type { LanguageSupport } from "@codemirror/language";
 import { oneDarkTheme } from "@codemirror/theme-one-dark";
-
+const consoleHeight = ref<number>(0);
+const aSideRef = ref<HTMLElement>(null);
+const iframeRef = ref<HTMLIFrameElement>(null);
 const editorWidth = ref<number>(0);
 const resultBoxWidth = ref<number>(0);
 const watchWidth = () => {
@@ -66,6 +70,8 @@ const changeCode = (newCode: string) => {
 
 onMounted(() => {
   watchWidth();
+  consoleHeight.value =
+    aSideRef.value.scrollHeight - aSideRef.value.firstElementChild.clientHeight - 10;
   window.addEventListener("resize", watchWidth);
 });
 </script>

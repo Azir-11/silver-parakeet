@@ -13,9 +13,7 @@ const defultCodeList: Array<codeItem> = [
   },
   {
     mode: "CSS",
-    code: `h1{
-      color:red
-    }`,
+    code: `h1{\n \tcolor:red\n}`,
   },
   {
     mode: "JavaScript",

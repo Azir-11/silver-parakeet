@@ -49,7 +49,7 @@ onMounted(() => {
         iframeRef.value.src = "/html/instance.html";
 
         runCode(iframeRef.value);
-      }, 100);
+      }, 500);
     }, 100);
   });
 });
