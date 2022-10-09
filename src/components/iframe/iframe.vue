@@ -1,12 +1,14 @@
 <template>
-  <iframe
-    ref="iframeRef"
-    :width="`${props.width}px`"
-    :height="`${props.height}px`"
-    class="border-none"
-    src="/html/instance.html"
-  >
-  </iframe>
+  <div>
+    <iframe
+      ref="iframeRef"
+      :width="`${props.width}px`"
+      :height="`${props.height}px`"
+      class="border-none"
+      src="/html/instance.html"
+    >
+    </iframe>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,8 +26,8 @@ const props = defineProps({
     default: 640,
   },
   height: {
-    type: String,
-    default: "480",
+    type: Number,
+    default: 480,
   },
 });
 

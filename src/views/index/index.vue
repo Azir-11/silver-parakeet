@@ -13,11 +13,9 @@
       </div>
     </div>
     <div ref="aSideRef" class="w-full h-full pl-3">
-      <Iframe ref="iframeRef" class="bg-white" :width="resultBoxWidth"></Iframe>
-      <div class="console" :style="{ height: consoleHeight + 'px' }">
-        <n-scrollbar>
-          <Console :width="resultBoxWidth"></Console>
-        </n-scrollbar>
+      <Iframe class="bg-white" :width="resultBoxWidth"></Iframe>
+      <div class="console" :style="{ height: consoleHeight - 24 + 'px' }">
+        <Console :width="resultBoxWidth"></Console>
       </div>
     </div>
   </section>
@@ -28,30 +26,23 @@ import { useWebCodes } from "@/hooks/setting/useWebCodes";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-
 import type { LanguageSupport } from "@codemirror/language";
 import { oneDarkTheme } from "@codemirror/theme-one-dark";
 const consoleHeight = ref<number>(0);
 const aSideRef = ref<HTMLElement>(null);
-const iframeRef = ref<HTMLIFrameElement>(null);
 const editorWidth = ref<number>(0);
 const resultBoxWidth = ref<number>(0);
-const watchWidth = () => {
+const watchWidthandHeight = () => {
   editorWidth.value = document.body.clientWidth / 2;
   resultBoxWidth.value = document.body.clientWidth - editorWidth.value - 60;
+  consoleHeight.value =
+    aSideRef.value.scrollHeight - aSideRef.value.firstElementChild.clientHeight - 10;
 };
 
 const codeStore = useWebCodes();
-
-const editorActiveIndex = computed(() => {
-  return codeStore.index;
-});
-const editorModes = computed(() => {
-  return codeStore.getModes;
-});
-const editorCode = computed(() => {
-  return codeStore.getModeCode;
-});
+const editorActiveIndex = computed(() => codeStore.index);
+const editorModes = computed(() => codeStore.getModes);
+const editorCode = computed(() => codeStore.getModeCode);
 
 const getLanguage = (language: string): LanguageSupport => {
   switch (language) {
@@ -69,10 +60,8 @@ const changeCode = (newCode: string) => {
 };
 
 onMounted(() => {
-  watchWidth();
-  consoleHeight.value =
-    aSideRef.value.scrollHeight - aSideRef.value.firstElementChild.clientHeight - 10;
-  window.addEventListener("resize", watchWidth);
+  watchWidthandHeight();
+  window.addEventListener("resize", watchWidthandHeight);
 });
 </script>
 
