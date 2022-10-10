@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { AppProvider } from "@/components/Application";
 import Layout from "@/Layout/index.vue";
-import { zhCN, dateZhCN, darkTheme } from "naive-ui";
+import { zhCN, dateZhCN, darkTheme, c } from "naive-ui";
 </script>
 
 <style>

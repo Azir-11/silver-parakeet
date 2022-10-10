@@ -41,7 +41,7 @@
                 <TabsView />
               </div>
             </div>
-            <div class="box-border overflow-auto" :style="`height:${mainHeight}px`">
+            <div class="box-border overflow-hidden" :style="`height:${mainHeight}px`">
               <Main />
             </div>
           </n-scrollbar>

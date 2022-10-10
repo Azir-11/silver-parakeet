@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="iframe origin-top-right select-none" :style="{ height: height + 'px' }">
+    <div class="iframeVisible" v-if="isVisible"></div>
     <iframe
       ref="iframeRef"
       :width="`${props.width}px`"
-      :height="`${props.height}px`"
       class="border-none"
       src="/html/instance.html"
+      :height="`${props.height}px`"
     >
     </iframe>
   </div>
@@ -28,6 +29,10 @@ const props = defineProps({
   height: {
     type: Number,
     default: 480,
+  },
+  isVisible: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -83,4 +88,12 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.iframeVisible {
+  width: 100%;
+  position: absolute;
+  height: v-bind(height + "px");
+  background-color: rgb(0, 0, 0, 0.5);
+  opacity: 0.5;
+}
+</style>
