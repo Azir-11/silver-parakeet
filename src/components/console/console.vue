@@ -1,15 +1,11 @@
 <template>
-  <div class="console duration-1000 ease-in-out" :style="{ height: height + 'px' }">
+  <div class="console select-none" :style="{ height: height + 'px' }">
     <div class="flex border-b-white border-solid border-0 border-b justify-between pr-2">
       <div class="inline-block h-auto">
         <n-icon :component="ArrowForward" class="align-middle h-4"></n-icon>
         <span class="inline-block">console</span>
       </div>
-      <div
-        title="重置大小"
-        @mousedown="resize"
-        class="cursor-move transition duration-1000 ease-in-out"
-      >
+      <div title="重置大小" @mousedown="resize" class="cursor-move ease-in-out">
         <n-icon :component="ReorderFourOutline" size="24" class="align-middle"></n-icon>
       </div>
       <div>
@@ -18,19 +14,24 @@
         <n-icon :component="ArrowDown" class="align-middle h-4" title="最小化"></n-icon>
       </div>
     </div>
-    <n-scrollbar>
-      <div v-for="(item, index) in consoleInfos" :key="index" class="flex">
-        <div v-if="item.type === 'mix'">
-          <Editor
-            :width="props.width"
-            :language="javascript()"
-            :theme="consoleTheme"
-            :is-editable="false"
-            :model-value="typeof item.content === 'string' ? item.content : ''"
-          ></Editor>
+    <n-scrollbar :style="{ height: height + 'px' }">
+      <div :style="{ height: height - 25 + 'px' }">
+        <div v-for="(item, index) in consoleInfos" :key="index" class="flex overflow-auto">
+          <div v-if="item.type === 'mix'">
+            <Editor
+              :width="props.width"
+              :language="javascript()"
+              :theme="consoleTheme"
+              :is-editable="false"
+              :model-value="typeof item.content === 'string' ? item.content : ''"
+            ></Editor>
+          </div>
+          <div v-if="item.type === 'log'" v-html="item.logs"></div>
         </div>
-        <div v-if="item.type === 'log'" v-html="item.logs"></div>
       </div>
+      <Transition name="fade">
+        <div class="bg-white" v-if="height > 100">&nbsp;</div>
+      </Transition>
     </n-scrollbar>
   </div>
 </template>
@@ -62,7 +63,13 @@ const props = defineProps({
 </script>
 
 <style>
-.console {
-  transition: height 2s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

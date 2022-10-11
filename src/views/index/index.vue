@@ -57,10 +57,7 @@ const resizeConsole = (e: any) => {
   const startY = e.clientY;
   const consoleH = consoleHeight.value;
   const iframeH = iframeHeight.value;
-  const viewHeight = aSideRef.value.clientHeight;
-  const splitDrag = e.clientY / 10;
-  console.log(viewHeight);
-
+  const viewHeight = consoleHeight.value + iframeHeight.value;
   const clearDocumentEvent = () => {
     document.onmouseup = () => {
       iframeVisible.value = false;
@@ -69,25 +66,13 @@ const resizeConsole = (e: any) => {
     };
   };
   document.onmousemove = (ev: MouseEvent) => {
-    if (iframeHeight.value < 10) {
-      iframeHeight.value = iframeH + (ev.clientY - startY) - 15;
-      consoleHeight.value =
-        consoleHeight.value >= 25 ? consoleH - (ev.clientY - startY) : consoleHeight.value;
-    } else {
-      if (consoleHeight.value < 0) {
-        const iframeNowH = iframeHeight.value;
-        consoleHeight.value = 0;
-        iframeHeight.value = iframeNowH;
-      } else {
-        iframeHeight.value =
-          consoleHeight.value <= 0 ? iframeHeight.value : iframeH + (ev.clientY - startY);
-        consoleHeight.value =
-          consoleHeight.value >= 0 ? consoleH - (ev.clientY - startY) : consoleHeight.value;
-        console.log(1);
-      }
-
-      clearDocumentEvent();
+    const iEvent = ev;
+    const finH = consoleH - iEvent.clientY + startY;
+    if (finH > 0 && viewHeight - finH > 0) {
+      consoleHeight.value = finH;
+      iframeHeight.value = viewHeight - finH;
     }
+    clearDocumentEvent();
   };
 };
 
