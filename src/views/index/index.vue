@@ -52,19 +52,30 @@ const editorModes = computed(() => codeStore.getModes);
 const editorCode = computed(() => codeStore.getModeCode);
 const { y } = useMouse();
 const iframeVisible = ref<boolean>(false);
-const resizeConsole = (e: MouseEvent) => {
+const resizeConsole = (e: any) => {
   iframeVisible.value = true;
   const startY = e.clientY;
-  const viewHeight = consoleHeight.value + iframeHeight.value;
-  // console.log(viewHeight);
-  document.onmousemove = (ev: any) => {
-    const iEvent = ev || event;
-    console.log(ev.clientY);
-    const finHeight = consoleHeight.value - iEvent.clientY + startY;
-    if (finHeight > 50 && viewHeight - finHeight > 0) {
-      consoleHeight.value = finHeight;
-      iframeHeight.value = viewHeight - finHeight;
+  const viewHeight = aSideRef.value.clientHeight;
+  const splitDrag = e.clientY / 10;
+  console.log(viewHeight);
+  document.onmousemove = (ev: MouseEvent) => {
+    const finH = startY - ev.clientY;
+    if (finH >= 0) {
+      consoleHeight.value =
+        consoleHeight.value >= 25 ? consoleHeight.value + 3 : consoleHeight.value;
+      iframeHeight.value = iframeHeight.value >= 10 ? iframeHeight.value - 3 : iframeHeight.value;
+    } else {
+      consoleHeight.value =
+        consoleHeight.value <= 25 ? consoleHeight.value : consoleHeight.value - 3;
+      iframeHeight.value =
+        iframeHeight.value >= viewHeight - 25 ? iframeHeight.value : iframeHeight.value + 3;
     }
+    // const finHeight = consoleHeight.value - ev.clientY + startY;
+    // if (finHeight > -5 && viewHeight - finHeight > 0) {
+    //   console.log(viewHeight - finHeight);
+    //   consoleHeight.value = finHeight;
+    //   iframeHeight.value = viewHeight - finHeight;
+    // }
     document.onmouseup = () => {
       iframeVisible.value = false;
       document.onmouseup = null;
