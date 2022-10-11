@@ -55,32 +55,39 @@ const iframeVisible = ref<boolean>(false);
 const resizeConsole = (e: any) => {
   iframeVisible.value = true;
   const startY = e.clientY;
+  const consoleH = consoleHeight.value;
+  const iframeH = iframeHeight.value;
   const viewHeight = aSideRef.value.clientHeight;
   const splitDrag = e.clientY / 10;
   console.log(viewHeight);
-  document.onmousemove = (ev: MouseEvent) => {
-    const finH = startY - ev.clientY;
-    if (finH >= 0) {
-      consoleHeight.value =
-        consoleHeight.value >= 25 ? consoleHeight.value + 3 : consoleHeight.value;
-      iframeHeight.value = iframeHeight.value >= 10 ? iframeHeight.value - 3 : iframeHeight.value;
-    } else {
-      consoleHeight.value =
-        consoleHeight.value <= 25 ? consoleHeight.value : consoleHeight.value - 3;
-      iframeHeight.value =
-        iframeHeight.value >= viewHeight - 25 ? iframeHeight.value : iframeHeight.value + 3;
-    }
-    // const finHeight = consoleHeight.value - ev.clientY + startY;
-    // if (finHeight > -5 && viewHeight - finHeight > 0) {
-    //   console.log(viewHeight - finHeight);
-    //   consoleHeight.value = finHeight;
-    //   iframeHeight.value = viewHeight - finHeight;
-    // }
+
+  const clearDocumentEvent = () => {
     document.onmouseup = () => {
       iframeVisible.value = false;
       document.onmouseup = null;
       document.onmousemove = null;
     };
+  };
+  document.onmousemove = (ev: MouseEvent) => {
+    if (iframeHeight.value < 10) {
+      iframeHeight.value = iframeH + (ev.clientY - startY) - 15;
+      consoleHeight.value =
+        consoleHeight.value >= 25 ? consoleH - (ev.clientY - startY) : consoleHeight.value;
+    } else {
+      if (consoleHeight.value < 0) {
+        const iframeNowH = iframeHeight.value;
+        consoleHeight.value = 0;
+        iframeHeight.value = iframeNowH;
+      } else {
+        iframeHeight.value =
+          consoleHeight.value <= 0 ? iframeHeight.value : iframeH + (ev.clientY - startY);
+        consoleHeight.value =
+          consoleHeight.value >= 0 ? consoleH - (ev.clientY - startY) : consoleHeight.value;
+        console.log(1);
+      }
+
+      clearDocumentEvent();
+    }
   };
 };
 

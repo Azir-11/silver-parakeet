@@ -4,9 +4,8 @@
     <iframe
       ref="iframeRef"
       :width="`${props.width}px`"
-      class="border-none"
+      class="border-none h-full"
       src="/html/instance.html"
-      :height="`${props.height}px`"
     >
     </iframe>
   </div>
