@@ -3,8 +3,8 @@
     class="iframe origin-top-right select-none w-full relative"
     :style="{ height: height + 'px' }"
   >
-    <div class="iframeVisible" v-if="isVisible.iframeVisble"></div>
-    <div class="absolute left-0 bottom-0 bg-black text-white" v-if="isVisible.iframeWidthShow">
+    <div v-if="isVisible.iframeVisible" class="iframeVisible"></div>
+    <div v-if="isVisible.iframeWidthShow" class="absolute left-0 bottom-0 bg-black text-white">
       {{ width }}px
     </div>
     <iframe
@@ -48,7 +48,7 @@ const editorTotalCode: ComputedRef<codeItem> = computed(() => {
   return webCodes.getTotalCode;
 });
 
-const iframeRef = ref<HTMLIFrameElement>(null);
+const iframeRef = ref(null);
 let timer, timer2;
 onMounted(() => {
   runCode(iframeRef.value);
@@ -65,7 +65,7 @@ onMounted(() => {
 });
 
 const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
-  const IframesHandler = new IframeHandler(iframe);
+  const IFramesHandler = new IframeHandler(iframe);
   const IframeConsole = new Consoles(iframe);
   useConsole().setConsoleInfo([]);
   let HTMLCode = editorTotalCode.value[0].code,
@@ -85,7 +85,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   setTimeout(async () => {
     IframeConsole.clear();
     IframeConsole.refresh(iframe);
-    await IframesHandler.insertCode({ HTMLCode, CSSCode, JSCode });
+    await IFramesHandler.insertCode({ HTMLCode, CSSCode, JSCode });
     useConsole().setConsoleInfo(IframeConsole.getLogs());
   }, 200);
 };

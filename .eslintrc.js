@@ -33,30 +33,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": [0],
     // 允许出现未使用的变量
     "no-unused-vars": 0,
-    // "@typescript-eslint/no-explicit-any": "off",
-    // "@typescript-eslint/explicit-module-boundary-types": "off",
-    // "@typescript-eslint/ban-types": "off",
-    // "@typescript-eslint/no-unused-vars": "off",
-    // "vue/html-indent": [
-    //   "error",
-    //   4,
-    //   {
-    //     attribute: 1,
-    //     baseIndent: 1,
-    //     closeBracket: 0,
-    //     alignAttributesVertically: true,
-    //     ignores: [],
-    //   },
-    // ],
-    // "vue/max-attributes-per-line": ["off"],
-    // // 强制使用驼峰命名
-    // "vue/component-name-in-template-casing": [
-    //   "error",
-    //   "PascalCase",
-    //   {
-    //     registeredComponentsOnly: false,
-    //     ignores: [],
-    //   },
-    // ],
+    // 项目中的v-html渲染都是可信的，无需该警告
+    "vue/no-v-html":"off" 
   },
 };

@@ -5,7 +5,7 @@
         <n-icon :component="ArrowForward" class="align-middle h-4"></n-icon>
         <span class="inline-block">console</span>
       </div>
-      <div title="重置大小" @mousedown="resize" class="cursor-move ease-in-out">
+      <div title="重置大小" class="cursor-move ease-in-out" @mousedown="resize">
         <n-icon :component="ReorderFourOutline" size="24" class="align-middle"></n-icon>
       </div>
       <div>

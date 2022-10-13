@@ -63,13 +63,13 @@ const editorCode = computed(() => codeStore.getModeCode);
 
 const { x, y } = useMouse(); //vueuse获取document的鼠标的x,y轴
 const editorStates = ref<State>({
-  iframeVisble: false,
+  iframeVisible: false,
   iframeWidthShow: false,
   resizeBarShow: false,
 }); //状态控制
 const clearDocumentEvent = () => {
   document.onmouseup = () => {
-    editorStates.value.iframeVisble = false;
+    editorStates.value.iframeVisible = false;
     editorStates.value.iframeWidthShow = false;
     editorStates.value.resizeBarShow = false;
     document.onmouseup = null;
@@ -77,7 +77,7 @@ const clearDocumentEvent = () => {
   };
 };
 const resizeConsoleHeight = () => {
-  editorStates.value.iframeVisble = true;
+  editorStates.value.iframeVisible = true;
   const startY = y.value;
   const consoleH = consoleHeight.value;
   const viewHeight = consoleHeight.value + iframeHeight.value;
@@ -92,7 +92,7 @@ const resizeConsoleHeight = () => {
 };
 
 const resizeResultBoxWidth = () => {
-  editorStates.value.iframeVisble = true;
+  editorStates.value.iframeVisible = true;
   editorStates.value.iframeWidthShow = true;
   editorStates.value.resizeBarShow = true;
   const startX = x.value;
