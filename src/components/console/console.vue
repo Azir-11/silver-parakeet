@@ -9,13 +9,25 @@
         <n-icon :component="ReorderFourOutline" size="24" class="align-middle"></n-icon>
       </div>
       <div>
-        <n-icon :component="Settings" class="align-middle h-4 pr-2" title="设置"></n-icon>
-        <n-icon :component="Trash" class="align-middle h-4 pr-2" title="清空控制台"></n-icon>
-        <n-icon :component="ArrowDown" class="align-middle h-4" title="最小化"></n-icon>
+        <n-icon
+          :component="Settings"
+          class="align-middle h-4 pr-2 cursor-pointer"
+          title="设置"
+        ></n-icon>
+        <n-icon
+          :component="Trash"
+          class="align-middle h-4 pr-2 cursor-pointer"
+          title="清空控制台"
+        ></n-icon>
+        <n-icon
+          :component="ArrowDown"
+          class="align-middle h-4 cursor-pointer"
+          title="最小化"
+        ></n-icon>
       </div>
     </div>
-    <n-scrollbar :style="{ height: height + 'px' }">
-      <div :style="{ height: height - 25 + 'px' }">
+    <n-scrollbar :style="{ height: height - 18 + 'px' }">
+      <div class="h-full">
         <div v-for="(item, index) in consoleInfos" :key="index" class="flex overflow-auto">
           <div v-if="item.type === 'mix'">
             <Editor
@@ -29,10 +41,8 @@
           <div v-if="item.type === 'log'" v-html="item.logs"></div>
         </div>
       </div>
-      <Transition name="fade">
-        <div class="bg-white" v-if="height > 100">&nbsp;</div>
-      </Transition>
     </n-scrollbar>
+    <div class="transition-all duration-150 bg-black text-white">123</div>
   </div>
 </template>
 
@@ -58,6 +68,7 @@ const props = defineProps({
   },
   height: {
     type: Number,
+    default: 300,
   },
 });
 </script>
@@ -65,7 +76,7 @@ const props = defineProps({
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: all 0.5s ease;
 }
 
 .fade-enter-from,

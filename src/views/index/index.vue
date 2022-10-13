@@ -12,7 +12,9 @@
         />
       </div>
     </div>
-    <div ref="aSideRef" class="w-full h-full pl-3">
+    <div class="w-4 h-full hover:bg-[#5e9cfb] transition-colors duration-300 cursor-w-resize"></div>
+    <!-- 这是个重置宽度的条 -->
+    <div ref="aSideRef" class="w-full h-full">
       <Iframe
         class="bg-white"
         :width="resultBoxWidth"
@@ -22,7 +24,7 @@
       <Console
         :width="resultBoxWidth"
         :height="consoleHeight"
-        @resize-console="resizeConsole"
+        @resize-console="resizeConsoleHeight"
       ></Console>
     </div>
   </section>
@@ -44,6 +46,8 @@ const resultBoxWidth = ref<number>(0);
 const watchWidthandHeight = () => {
   editorWidth.value = document.body.clientWidth / 2;
   resultBoxWidth.value = document.body.clientWidth - editorWidth.value - 60;
+  iframeHeight.value = aSideRef.value.firstElementChild.clientHeight;
+  consoleHeight.value = aSideRef.value.scrollHeight - iframeHeight.value - 34;
 };
 
 const codeStore = useWebCodes();
@@ -52,28 +56,31 @@ const editorModes = computed(() => codeStore.getModes);
 const editorCode = computed(() => codeStore.getModeCode);
 const { y } = useMouse();
 const iframeVisible = ref<boolean>(false);
-const resizeConsole = (e: any) => {
+const clearDocumentEvent = () => {
+  document.onmouseup = () => {
+    iframeVisible.value = false;
+    document.onmouseup = null;
+    document.onmousemove = null;
+  };
+};
+const resizeConsoleHeight = () => {
   iframeVisible.value = true;
-  const startY = e.clientY;
+  const startY = y.value;
   const consoleH = consoleHeight.value;
   const iframeH = iframeHeight.value;
   const viewHeight = consoleHeight.value + iframeHeight.value;
-  const clearDocumentEvent = () => {
-    document.onmouseup = () => {
-      iframeVisible.value = false;
-      document.onmouseup = null;
-      document.onmousemove = null;
-    };
-  };
-  document.onmousemove = (ev: MouseEvent) => {
-    const iEvent = ev;
-    const finH = consoleH - iEvent.clientY + startY;
-    if (finH > 0 && viewHeight - finH > 0) {
+  document.onmousemove = () => {
+    const finH: number = consoleH - y.value + startY;
+    if (finH > -7 && viewHeight - finH > 0) {
       consoleHeight.value = finH;
       iframeHeight.value = viewHeight - finH;
     }
     clearDocumentEvent();
   };
+};
+
+const resizeWidth = () => {
+  
 };
 
 const getLanguage = (language: string): LanguageSupport => {
@@ -93,8 +100,7 @@ const changeCode = (newCode: string) => {
 
 onMounted(() => {
   watchWidthandHeight();
-  iframeHeight.value = aSideRef.value.firstElementChild.clientHeight;
-  consoleHeight.value = aSideRef.value.scrollHeight - iframeHeight.value - 34;
+
   window.addEventListener("resize", watchWidthandHeight);
 });
 </script>
