@@ -1,6 +1,12 @@
 <template>
-  <div class="iframe origin-top-right select-none" :style="{ height: height + 'px' }">
-    <div class="iframeVisible" v-if="isVisible"></div>
+  <div
+    class="iframe origin-top-right select-none w-full relative"
+    :style="{ height: height + 'px' }"
+  >
+    <div class="iframeVisible" v-if="isVisible.iframeVisble"></div>
+    <div class="absolute left-0 bottom-0 bg-black text-white" v-if="isVisible.iframeWidthShow">
+      {{ width }}px
+    </div>
     <iframe
       ref="iframeRef"
       :width="`${props.width}px`"
@@ -14,12 +20,13 @@
 <script setup lang="ts">
 import { useWebCodes } from "@/hooks/setting/useWebCodes";
 import type { codeItem } from "@/hooks/setting/useWebCodes";
-import { ComputedRef } from "vue";
+import type { ComputedRef, PropType } from "vue";
 import { useConsole } from "@/hooks/setting/useConsole";
 import IframeHandler from "@/utils/handleInstanceView";
 import { compileHTML, compileJS, compileCSS } from "@/utils/compiler";
 import Consoles from "@/utils/console";
 import { format } from "@/utils/codeFormatter";
+import type { State } from "@/types/editor";
 const props = defineProps({
   width: {
     type: Number,
@@ -30,8 +37,8 @@ const props = defineProps({
     default: 480,
   },
   isVisible: {
-    type: Boolean,
-    default: false,
+    type: Object as PropType<State>,
+    default: () => {},
   },
 });
 
@@ -42,10 +49,8 @@ const editorTotalCode: ComputedRef<codeItem> = computed(() => {
 });
 
 const iframeRef = ref<HTMLIFrameElement>(null);
-const iframeWindows = ref(null);
 let timer, timer2;
 onMounted(() => {
-  iframeWindows.value = iframeRef.value.contentWindow;
   runCode(iframeRef.value);
   watch(editorTotalCode.value, (_newValue, _oldValue) => {
     timer && clearTimeout(timer);
@@ -53,10 +58,9 @@ onMounted(() => {
     timer2 = setTimeout(() => {
       timer = setTimeout(() => {
         iframeRef.value.src = "/html/instance.html";
-
         runCode(iframeRef.value);
       }, 500);
-    }, 100);
+    }, 100); //来个好心人帮我解一下屎吧
   });
 });
 
@@ -89,7 +93,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
 
 <style scoped>
 .iframeVisible {
-  width: 100%;
+  width: v-bind(width + "px");
   position: absolute;
   height: v-bind(height + "px");
   background-color: rgb(0, 0, 0, 0.5);

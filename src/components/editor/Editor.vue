@@ -1,5 +1,5 @@
 <template>
-  <div ref="editorDom" class="h-full" :style="`width:${props.width}px`"></div>
+  <div ref="editorDom" :class="`h-full`" :style="`width:${width}px`"></div>
 </template>
 
 <script lang="ts" setup>
@@ -118,7 +118,7 @@ onMounted(() => {
             // console.log("数据没更新");
           }
         }),
-        EditorView.editable.of(props.isEditable),
+        EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
       ],
     }),
   });

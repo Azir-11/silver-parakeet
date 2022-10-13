@@ -1,5 +1,5 @@
 <template>
-  <div class="console select-none" :style="{ height: height + 'px' }">
+  <div class="console select-none w-full" :style="{ height: height + 'px' }">
     <div class="flex border-b-white border-solid border-0 border-b justify-between pr-2">
       <div class="inline-block h-auto">
         <n-icon :component="ArrowForward" class="align-middle h-4"></n-icon>
