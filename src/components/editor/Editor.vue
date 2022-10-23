@@ -8,15 +8,12 @@ import { EditorView, basicSetup } from "codemirror";
 import type { ViewUpdate } from "@codemirror/view";
 import { EditorState, Facet } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
-import { foldAll, LanguageSupport } from "@codemirror/language";
+import { foldAll, foldGutter, foldService, LanguageSupport } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
 import { projectTheme } from "./theme/projectTheme";
 import { projectHighlightStyle } from "./theme/projectHighlightStyle";
-
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
-
-const editorDom = ref<HTMLElement>(null);
 
 const props = defineProps({
   // 编译器内的文本
@@ -27,7 +24,7 @@ const props = defineProps({
   // 语言模式
   language: {
     type: LanguageSupport,
-    default: "css",
+    default: javascriptLanguage,
   },
   // 主题
   theme: {
@@ -45,8 +42,8 @@ const props = defineProps({
   },
 });
 
+const editorDom = ref(null);
 const emit = defineEmits(["changeCode"]);
-
 const completePropertyAfter = ["PropertyName", ".", "?."];
 const dontCompleteIn = [
   "TemplateString",
@@ -97,7 +94,7 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
 });
 
 onMounted(() => {
-  //初始化实例
+  //初始化编辑器实例
   const editor = new EditorView({
     parent: editorDom.value,
     state: EditorState.create({
@@ -109,6 +106,10 @@ onMounted(() => {
         globalJavaScriptCompletions,
         // oneDarkTheme,
         props.theme,
+        // foldGutter({
+        //   openText: "收",
+        //   closedText: "开",
+        // }),
         syntaxHighlighting(projectHighlightStyle),
         // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
         EditorView.updateListener.of((v: ViewUpdate) => {
@@ -122,6 +123,7 @@ onMounted(() => {
       ],
     }),
   });
+
   if (!props.isEditable) {
     foldAll(editor);
   }
@@ -129,7 +131,24 @@ onMounted(() => {
 </script>
 
 <style>
-.ͼ1.cm-editor {
+.cm-editor {
   height: 100%;
+}
+::-webkit-scrollbar {
+  outline: none;
+  width: 12px;
+  height: 12px;
+  background-color: transparent;
+  @include setTransition(all, 0.3s, ease);
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(30, 30, 30, 0);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(160, 160, 160, 0.3);
+}
+::-webkit-scrollbar-thumb:hover {
+  outline: none;
+  background-color: rgba(173, 173, 173, 0.7);
 }
 </style>

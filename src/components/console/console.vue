@@ -1,5 +1,5 @@
 <template>
-  <div class="console select-none w-full" :style="{ height: height + 'px' }">
+  <div class="console bg-[#282c34] select-none w-full" :style="{ height: height + 'px' }">
     <div class="flex border-b-white border-solid border-0 border-b justify-between pr-2">
       <div class="inline-block h-auto">
         <n-icon :component="ArrowForward" class="align-middle h-4"></n-icon>
@@ -28,7 +28,7 @@
     </div>
     <n-scrollbar :style="{ height: height - 18 + 'px' }">
       <div class="h-full">
-        <div v-for="(item, index) in consoleInfos" :key="index" class="flex overflow-auto">
+        <div v-for="(item, index) in consoleInfos" :key="index" class="flex overflow-x-hidden">
           <div v-if="item.type === 'mix'">
             <Editor
               :width="props.width"
@@ -42,14 +42,16 @@
         </div>
       </div>
     </n-scrollbar>
-    <div class="transition-all duration-150 bg-black text-white">123</div>
+    <div class="transition-all duration-150 bg-[#282c34] text-white border-t-1 border-t-blue">
+      123
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ArrowForward, ReorderFourOutline, Settings, Trash, ArrowDown } from "@vicons/ionicons5";
-import type { consoleinfo } from "@/utils/console";
-import { useConsole } from "@/hooks/setting/useConsole";
+import type { consoleinfo } from "@/utils/webEditor/console";
+import { useConsole } from "@/hooks/webEditor/useConsole";
 import { javascript } from "@codemirror/lang-javascript";
 import { consoleTheme } from "../../components/editor/theme/projectTheme";
 const useConsoles = useConsole();

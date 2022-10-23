@@ -1,82 +1,45 @@
 <template>
-  <n-layout :native-scrollbar="false">
-    <n-layout style="height: 100vh" has-sider>
-      <n-layout-header
-        position="absolute"
-        :style="`height:${headerHeight}px`"
-        class="border-solid border-0 border-b border-gray-200 bg-baseBg"
-      >
-        <PageHeader @update:collapsed="changeCollapsed" />
-      </n-layout-header>
-      <n-layout-content
-        position="absolute"
-        :style="`top:${headerHeight}px`"
-        :class="{ 'bg-baseBg': getDarkTheme === false }"
-        has-sider
-      >
-        <n-layout-sider
-          v-if="!mobile"
-          bordered
-          show-trigger="arrow-circle"
-          position="static"
-          :on-update:collapsed="changeCollapsed"
-          :collapsed="collapsed"
-          collapse-mode="width"
-          :collapsed-width="49"
-          :width="200"
-          :native-scrollbar="false"
-          class="shadow-xl bg-baseBg"
-          style="max-height: 100vh"
-        >
-          <AsideMenu />
-        </n-layout-sider>
-        <section class="w-full">
-          <n-scrollbar>
-            <div
-              class="pl-12"
-              :class="{ 'bg-baseBg': getDarkTheme === false }"
-              :style="`height:${tabsHeight}px;`"
-            >
-              <div class="w-1/4">
-                <TabsView />
-              </div>
-            </div>
-            <div class="box-border overflow-hidden" :style="`height:${mainHeight}px`">
-              <Main />
-            </div>
-          </n-scrollbar>
-        </section>
-      </n-layout-content>
-    </n-layout>
-  </n-layout>
+  <section class="flex flex-col wh-full">
+    <GlobalHeader
+      class="z-1001 globalComponents w-full left-0 top-0 pl-[64px]"
+      :style="`height:${headerHeight}px`"
+      :class="activeTheme"
+    />
+    <GlobalMenu
+      class="z-1003 globalComponents h-screen left-0 top-0"
+      :class="activeTheme"
+      :mobile="mobile"
+      :show-side-drawder="showSideDrawder"
+      :menu-collapsed-width="menuCollapsedWidth"
+    />
+    <GlobalMain
+      class="z-999 w-full flex-grow pl-[64px]"
+      :class="activeTheme"
+      :style="`padding-top:${headerHeight}px`"
+    />
+    <GlobalFooter class="z-1002 w-screen bottom-0 bg-white pl-[64px]" />
+  </section>
 </template>
 
 <script setup lang="ts">
-import { AsideMenu } from "./components/Menu";
-import { PageHeader } from "./components/Header";
-import { TabsView } from "./components/Tab";
-import Main from "@/views/index/index.vue";
+import { GlobalHeader } from "./components/Header";
+// import { GlobalTabs } from "./components/Tab";
+import { GlobalMain } from "./components/Main";
+import { GlobalMenu } from "./components/Menu";
+import { GlobalFooter } from "./components/Footer";
 import { useSystemSetting } from "@/hooks/setting/useSystemSetting";
 
-const collapsed = ref<boolean>(true);
-const mobile = ref<boolean>(false);
-const showSideDrawder = ref(false);
-const headerHeight = 40;
-const tabsHeight = 40;
-const footerHeight = 34;
-const mainHeight = computed(() => {
-  return document.body.clientHeight - headerHeight - tabsHeight - footerHeight;
-});
-
-const changeCollapsed = () => {
-  if (mobile.value && collapsed.value) {
-    showSideDrawder.value = !showSideDrawder.value;
-  } else {
-    collapsed.value = !collapsed.value;
-  }
-};
-
 const { getDarkTheme } = useSystemSetting();
-</script>
 
-<style></style>
+// 是否为移动端
+const mobile = ref<boolean>(false);
+// 是否显示抽屉菜单
+const showSideDrawder = ref(false);
+// 头部菜单的高度
+const headerHeight = ref(38);
+// menu宽度
+const menuCollapsedWidth = ref(64);
+// 获取当前应该活跃的背景色(黑/白)
+const activeTheme = computed(() => (getDarkTheme.value ? "bg-[#282c34]" : "bg-white"));
+// 编辑器
+</script>

@@ -27,8 +27,10 @@ export const projectTheme = EditorView.theme({
     backgroundColor: "#282c34",
     color: "#535773",
     border: "none",
-
   },
+  // ".cm-gutterElement span": {
+  //   display: "none !important",
+  // },
   // 选中的行号
   ".cm-activeLineGutter": {
     backgroundColor: "#282c34",
@@ -67,8 +69,8 @@ export const consoleTheme = EditorView.theme({
     color: "#535773",
     border: "none",
   },
-  ".cm-lineNumbers":{
-    display:"none !important"
+  ".cm-lineNumbers": {
+    display: "none !important",
   },
   // 选中的行号
   ".cm-activeLineGutter": {

@@ -6,10 +6,7 @@ module.exports = {
   },
   extends: [
     "plugin:vue/vue3-recommended",
-    // 此条内容开启会导致 全局定义的 ts 类型报  no-undef 错误，因为
-    // https://cn.eslint.org/docs/rules/
     "eslint:recommended",
-    // "plugin:@typescript-eslint/recommended", // typescript-eslint推荐规则,
     "prettier",
     "plugin:prettier/recommended",
     "./.eslintrc-auto-import.json",
@@ -22,9 +19,7 @@ module.exports = {
   },
   plugins: ["vue", "@typescript-eslint"],
   rules: {
-    // 'no-undef': 'off',
-    // 禁止 function 出现重名参数
-    // "no-dupe-args": "warring",
+    "no-undef": "off",
     semi: [1],
     camelcase: 0,
     // 屏蔽文件名必须为驼峰
@@ -34,6 +29,6 @@ module.exports = {
     // 允许出现未使用的变量
     "no-unused-vars": 0,
     // 项目中的v-html渲染都是可信的，无需该警告
-    "vue/no-v-html":"off" 
+    "vue/no-v-html": "off",
   },
 };

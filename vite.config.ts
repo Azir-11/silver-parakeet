@@ -5,8 +5,11 @@ import vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import AutoImport from "unplugin-auto-import/vite";
-import requireTransform from "vite-plugin-require-transform";
+import Unocss from "unocss/vite";
+
 import eslintPlugin from "vite-plugin-eslint";
+
+import { viteMockServe } from "vite-plugin-mock";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -36,6 +39,7 @@ export default defineConfig({
         // 插件预设支持导入的api
         "vue",
         "pinia",
+        "vue-router",
         // 自定义导入的api
       ],
 
@@ -52,34 +56,21 @@ export default defineConfig({
       // Set `false` to disable.
       dts: "./auto-imports.d.ts",
     }),
+    viteMockServe({
+      mockPath: "./mock",
+      supportTs: true,
+    }),
+    Unocss(),
   ],
+  server: {
+    host: "0.0.0.0",
+    port: 5200,
+    // 启动之后自动打开页面
+    open: true,
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // ...
-          codemirror: [
-            // Split CodeMirror code.
-            "codemirror",
-            "@codemirror/autocomplete",
-            "@codemirror/commands",
-            "@codemirror/language",
-            "@codemirror/lint",
-            "@codemirror/search",
-            "@codemirror/state",
-            "@codemirror/view",
-            // Add the following as needed.
-            "@codemirror/lang-html",
-            "@codemirror/lang-javascript",
-          ],
-          // ...
-        },
-      },
     },
   },
 });

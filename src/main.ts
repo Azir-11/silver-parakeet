@@ -1,23 +1,23 @@
+import { createApp } from "vue";
 import App from "./App.vue";
-import "./assets/css/taiwind.css";
+import { setupRouter } from "./router";
 import { setupStore } from "@/stores";
-import { AppProvider } from "@/components/Application";
+import { setupAssets } from "./plugins";
 
-async function bootstrap() {
-  const appProvider = createApp(AppProvider);
+async function setupApp() {
+  // import assets: js、css
+  setupAssets();
 
   const app = createApp(App);
 
-  // 挂载状态管理
+  // 安装pinia
   setupStore(app);
 
-  //优先挂载一下 Provider 解决路由守卫，Axios中可使用，Dialog，Message 等之类组件
-  appProvider.mount("#appProvider", true);
+  // 安装路由
+  await setupRouter(app);
 
-  app.mount("#app", true);
+  // mount app
+  app.mount("#app");
 }
 
-const meta = document.createElement("meta");
-meta.name = "naive-ui-style";
-document.head.appendChild(meta);
-void bootstrap();
+setupApp();

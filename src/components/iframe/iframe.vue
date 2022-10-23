@@ -7,10 +7,11 @@
     <div v-if="isVisible.iframeWidthShow" class="absolute left-0 bottom-0 bg-black text-white">
       {{ width }}px
     </div>
+    <div class="h-[42px]">预留位置</div>
     <iframe
       ref="iframeRef"
       :width="`${props.width}px`"
-      class="border-none h-full"
+      class="border-none h-full bg-white"
       src="/html/instance.html"
     >
     </iframe>
@@ -18,14 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import { useWebCodes } from "@/hooks/setting/useWebCodes";
-import type { codeItem } from "@/hooks/setting/useWebCodes";
+import { useWebCodes } from "@/hooks/webEditor/useWebCodes";
+import type { codeItem } from "@/hooks/webEditor/useWebCodes";
 import type { ComputedRef, PropType } from "vue";
-import { useConsole } from "@/hooks/setting/useConsole";
-import IframeHandler from "@/utils/handleInstanceView";
-import { compileHTML, compileJS, compileCSS } from "@/utils/compiler";
-import Consoles from "@/utils/console";
-import { format } from "@/utils/codeFormatter";
+import { useConsole } from "@/hooks/webEditor/useConsole";
+import IframeHandler from "@/utils/webEditor/handleInstanceView";
+import { compileHTML, compileJS, compileCSS } from "@/utils/webEditor/compiler";
+import Consoles from "@/utils/webEditor/console";
+import { format } from "@/utils/webEditor/codeFormatter";
 import type { State } from "@/types/editor";
 const props = defineProps({
   width: {

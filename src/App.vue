@@ -1,22 +1,17 @@
 <template>
-  <n-config-provider
-    :locale="zhCN"
-    :theme="darkTheme"
-    :theme-overrides="darkTheme"
-    :date-locale="dateZhCN"
-  >
+  <n-config-provider :locale="zhCN" :theme="getDarkTheme" :date-locale="dateZhCN" class="h-full">
     <AppProvider>
-      <Layout />
+      <RouterView />
     </AppProvider>
   </n-config-provider>
 </template>
 
 <script setup lang="ts">
 import { AppProvider } from "@/components/Application";
-import Layout from "@/Layout/index.vue";
-import { zhCN, dateZhCN, darkTheme, c } from "naive-ui";
-</script>
+import { zhCN, dateZhCN, darkTheme } from "naive-ui";
+import { useSystemSettingStore } from "@/stores/modules/systemSetting";
 
-<style>
-@import "@/assets/base.css";
-</style>
+const systemStore = useSystemSettingStore();
+
+const getDarkTheme = computed(() => (systemStore.darkTheme ? darkTheme : undefined));
+</script>

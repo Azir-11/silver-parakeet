@@ -1,5 +1,7 @@
 <template>
-  <a class="block text-center"> MIT Licensed | Copyright © 2022-present 青菜白玉汤 </a>
+  <footer class="h-8 py-2 flex flex-col justify-center">
+    <a class="block text-center"> 底部 </a>
+  </footer>
 </template>
 
 <script setup lang="ts"></script>
