@@ -26,7 +26,7 @@
         ></n-icon>
       </div>
     </div>
-    <n-scrollbar :style="{ height: height - 18 + 'px' }">
+    <n-scrollbar :style="{ height: height - 24 + 'px' }">
       <div class="h-full">
         <div v-for="(item, index) in consoleInfos" :key="index" class="flex overflow-x-hidden">
           <div v-if="item.type === 'mix'">

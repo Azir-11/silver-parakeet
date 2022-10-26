@@ -111,7 +111,7 @@ const resizeConsoleHeight = () => {
   const viewHeight = consoleHeight.value + iframeHeight.value;
   document.onmousemove = () => {
     const finH: number = consoleH - y.value + startY;
-    if (finH > -7 && viewHeight - finH > 0) {
+    if (finH > -7 && viewHeight - finH > 42) {
       consoleHeight.value = finH;
       iframeHeight.value = viewHeight - finH;
     }
@@ -136,7 +136,7 @@ const resizeResultBoxWidth = () => {
   const viewWidth = resultBoxW + editorW;
   document.onmousemove = () => {
     console.log(x.value);
-    const finW: number = editorW + x.value - startX + 6;
+    const finW: number = editorW + x.value - startX - 6;
 
     if (finW > leftborder && viewWidth - finW > rightBorder) {
       editorWidth.value = finW;

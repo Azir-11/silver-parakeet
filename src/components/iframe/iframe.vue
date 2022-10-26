@@ -7,11 +7,12 @@
     <div v-if="isVisible.iframeWidthShow" class="absolute left-0 bottom-0 bg-black text-white">
       {{ width }}px
     </div>
-    <div class="h-[42px]">预留位置</div>
+    <div class="h-[42px]">123</div>
     <iframe
       ref="iframeRef"
-      :width="`${props.width}px`"
-      class="border-none h-full bg-white"
+      :width="`${width}px`"
+      :height="`${height - 42}px`"
+      class="border-none bg-white"
       src="/html/instance.html"
     >
     </iframe>
