@@ -17,14 +17,6 @@ export const ROOT_ROUTE: RouteRecordRaw = {
 export const constantRoutes: RouteRecordRaw[] = [
   ROOT_ROUTE,
   {
-    name: "login",
-    path: "/login",
-    component: () => import("@/views/login/index.vue"),
-    meta: {
-      title: "登录",
-    },
-  },
-  {
     name: "abnormal",
     path: "/abnormal",
     component: Layout,

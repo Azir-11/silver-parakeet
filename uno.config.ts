@@ -1,17 +1,7 @@
 import { defineConfig, presetUno } from "unocss";
 
 export default defineConfig({
-  exclude: [
-    "node_modules",
-    ".git",
-    ".husky",
-    ".vscode",
-    "dist",
-    "public",
-    "build",
-    "mock",
-    "./stats.html",
-  ],
+  exclude: ["node_modules", ".git", ".husky", ".vscode", "dist", "public", "build", "./stats.html"],
   presets: [presetUno({ dark: "class" })],
   shortcuts: {
     "wh-full": "w-full h-full",

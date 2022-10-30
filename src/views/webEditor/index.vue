@@ -1,6 +1,6 @@
 <template>
   <div class="wh-full overflow-hidden flex flex-col">
-    <section class="flex box-border wh-full">
+    <section class="flex box-border wh-full overflow-hidden">
       <div class="flex flex-1 flex-col">
         <nav class="pl-8">
           <n-tabs type="line">
@@ -19,7 +19,11 @@
             v-for="(item, index) in editorModes"
             :key="index"
             class="overflow-hidden"
-            :style="index === editorActiveIndex ? `height:calc(100vh - 104.5px)` : ''"
+            :style="
+              index === editorActiveIndex
+                ? `height:calc(100vh - ${theme.header.height + theme.footer.height + 42}px)`
+                : ''
+            "
           >
             <div
               v-if="index === editorActiveIndex"
@@ -43,7 +47,7 @@
         :class="editorStates.resizeBarShow ? 'bg-[#5e9cfb]' : 'bg-[#282c34]'"
         @mousedown="resizeResultBoxWidth"
       ></div>
-      <div ref="ASideRef" class="h-full bg-[#282c34]" :style="`width:${resultBoxWidth - 12}px`">
+      <div ref="ASideRef" class="h-full bg-[#282c34]" :style="`width:${resultBoxWidth - 12}px;`">
         <Iframe :width="resultBoxWidth" :height="iframeHeight" :is-visible="editorStates"></Iframe>
         <Console
           :width="resultBoxWidth"
@@ -64,6 +68,14 @@ import type { LanguageSupport } from "@codemirror/language";
 // import { oneDarkTheme } from "@codemirror/theme-one-dark";
 import { useMouse } from "@vueuse/core";
 import type { State } from "@/types/editor";
+import { useAppStore, useThemeStore } from "@/stores";
+
+const app = useAppStore();
+const theme = useThemeStore();
+// 进入该路由时将菜单收缩
+app.setSiderCollapse(false);
+// 默认为暗色主题
+theme.setDarkMode(true);
 
 // 标签页列表
 const webCodeStore = useWebCodes();

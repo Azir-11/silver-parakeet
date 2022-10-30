@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from "vue-router";
 import { Layout } from "@/router/routes/constant";
+import { GridOutline, BarcodeOutline, CafeOutline } from "@vicons/ionicons5";
 import { renderIcon } from "@/utils/index";
-import { LogoHtml5 } from "@vicons/ionicons5";
 
 /**
  * @param name 路由名称, 必须设置,且不能重名
@@ -12,24 +12,28 @@ import { LogoHtml5 } from "@vicons/ionicons5";
  * @param meta.icon 菜单图标
  * @param meta.keepAlive 缓存该路由
  * @param meta.sort 排序越小越排前
- *
+ * @param meta.hidden 隐藏这个菜单项
+ * @param meta.tabsHidden 在标签页中不显示该路由
  * */
+
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/webEditor",
-    name: "webEditor",
-    redirect: "/webEditor/index",
+    name: "wenEditor",
+    path: "/wenEditor",
     component: Layout,
     meta: {
-      icon: renderIcon(LogoHtml5),
+      title: "web编辑器",
+      order: 1,
+      icon: renderIcon(GridOutline),
     },
     children: [
       {
-        path: "index",
-        name: "webEditor_index",
+        name: "wenEditor_index",
+        path: "/wenEditor/index",
         component: () => import("@/views/webEditor/index.vue"),
         meta: {
           title: "web编辑器",
+          icon: renderIcon(BarcodeOutline),
         },
       },
     ],

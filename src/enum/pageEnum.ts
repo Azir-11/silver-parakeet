@@ -6,9 +6,9 @@ export enum PageEnum {
   REDIRECT_PATH = "/redirect",
   REDIRECT_NAME = "Redirect",
   // 首页
-  BASE_HOME = "/webEditor/index",
+  BASE_HOME = "/wenEditor/index",
   //首页跳转默认路由
-  BASE_HOME_REDIRECT = "/webEditor/index",
+  BASE_HOME_REDIRECT = "/wenEditor/index",
   // 未找到页面
   NOT_FOUND_PATH = "/abnormal/NotFound",
   NOT_FOUND_NAME = "NotFound",

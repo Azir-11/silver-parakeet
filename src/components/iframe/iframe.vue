@@ -7,7 +7,7 @@
     <div v-if="isVisible.iframeWidthShow" class="absolute left-0 bottom-0 bg-black text-white">
       {{ width }}px
     </div>
-    <div class="h-[42px]">123</div>
+    <div class="h-[42px]">iframe头部预留功能区</div>
     <iframe
       ref="iframeRef"
       :width="`${width}px`"

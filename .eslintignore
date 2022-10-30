@@ -13,4 +13,3 @@ dist
 /bin
 .eslintrc.js
 prettier.config.js
-/src/mock/*

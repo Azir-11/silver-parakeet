@@ -1,6 +1,6 @@
-# silver-parakeet
+# soup-admin
 
-一个支持在网页上写网页的在线编辑器
+一个帮助开发者快速开发的轻量级中后台框架
 
 
 
@@ -12,9 +12,10 @@
 2. TypeScript
 3. vite
 4. Naive-ui
-5. pinia
-6. axios
-7. tailwindCSS
+5. vue-router
+6. pinia
+7. axios
+8. tailwindCSS
 
 
 
