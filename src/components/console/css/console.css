@@ -1,0 +1,15 @@
+.cm-string {
+  color: #98c379;
+}
+.cm-number {
+  color: #ae81ff;
+}
+.cm-none {
+  color: #6a6a6a;
+}
+.cm-atom {
+  color: #ae81ff;
+}
+.cm-variable {
+  color: #3bc9b0;
+}

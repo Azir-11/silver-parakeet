@@ -2,8 +2,8 @@
   <div class="console bg-[#282c34] select-none w-full" :style="{ height: height + 'px' }">
     <div class="flex border-b-white border-solid border-0 border-b justify-between pr-2">
       <div class="inline-block h-auto">
-        <n-icon :component="ArrowForward" class="align-middle h-4"></n-icon>
-        <span class="inline-block">console</span>
+        <n-icon :component="ArrowForward" class="align-middle h-4 text-white"></n-icon>
+        <span class="inline-block text-white">console</span>
       </div>
       <div title="重置大小" class="cursor-move ease-in-out" @mousedown="resize">
         <n-icon :component="ReorderFourOutline" size="24" class="align-middle"></n-icon>
@@ -11,17 +11,17 @@
       <div>
         <n-icon
           :component="Settings"
-          class="align-middle h-4 pr-2 cursor-pointer"
+          class="align-middle h-4 pr-2 cursor-pointer text-white"
           title="设置"
         ></n-icon>
         <n-icon
           :component="Trash"
-          class="align-middle h-4 pr-2 cursor-pointer"
+          class="align-middle h-4 pr-2 cursor-pointer text-white"
           title="清空控制台"
         ></n-icon>
         <n-icon
           :component="ArrowDown"
-          class="align-middle h-4 cursor-pointer"
+          class="align-middle h-4 cursor-pointer text-white"
           title="最小化"
         ></n-icon>
       </div>
@@ -38,7 +38,7 @@
               :model-value="typeof item.content === 'string' ? item.content : ''"
             ></Editor>
           </div>
-          <div v-if="item.type === 'log'" v-html="item.logs"></div>
+          <div v-if="item.type === 'log'" class="pl-4" v-html="item.logs"></div>
         </div>
       </div>
     </n-scrollbar>
@@ -76,6 +76,7 @@ const props = defineProps({
 </script>
 
 <style>
+@import "./css/console.css";
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.5s ease;
