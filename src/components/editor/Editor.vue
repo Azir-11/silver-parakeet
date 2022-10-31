@@ -1,5 +1,9 @@
 <template>
-  <div ref="editorDom" :class="`h-full`" :style="`width:${width}px`"></div>
+  <div
+    ref="editorDom"
+    :class="`h-full`"
+    :style="`width:${width}px;font-family: JetBrainsMono;`"
+  ></div>
 </template>
 
 <script lang="ts" setup>
@@ -10,7 +14,7 @@ import { EditorState, Facet } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
 import { foldAll, foldGutter, foldService, LanguageSupport } from "@codemirror/language";
 import { syntaxHighlighting } from "@codemirror/language";
-import { projectTheme } from "./theme/projectTheme";
+import { Theme } from "./theme/projectTheme";
 import { projectHighlightStyle } from "./theme/projectHighlightStyle";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
@@ -29,7 +33,7 @@ const props = defineProps({
   // 主题
   theme: {
     type: Object as PropType<Extension>,
-    default: projectTheme,
+    default: Theme,
   },
   //宽度
   width: {
@@ -54,6 +58,7 @@ const dontCompleteIn = [
 ];
 
 function completeFromGlobalScope(context: any) {
+  console.log("context.state", context.state);
   let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
 
   if (
