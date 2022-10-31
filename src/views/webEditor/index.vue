@@ -36,6 +36,7 @@
                 :language="getLanguage(item)"
                 :model-value="editorCode"
                 @change-code="changeCode"
+                :setup="item === 'HTML' ? htmlSetup : basicSetup"
               />
             </div>
           </div>
@@ -52,6 +53,7 @@
         <Console
           :width="resultBoxWidth"
           :height="consoleHeight"
+          @minimal-Console="minimalConsole"
           @resize-console="resizeConsoleHeight"
         ></Console>
       </div>
@@ -64,6 +66,7 @@ import { useWebCodes } from "@/hooks/webEditor/useWebCodes";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
+import { htmlSetup, basicSetup } from "@/components/editor/setup";
 import type { LanguageSupport } from "@codemirror/language";
 // import { oneDarkTheme } from "@codemirror/theme-one-dark";
 import { useMouse } from "@vueuse/core";
@@ -142,12 +145,10 @@ const resizeResultBoxWidth = () => {
   editorStates.value.iframeWidthShow = true;
   editorStates.value.resizeBarShow = true;
   const startX = x.value;
-  console.log(startX);
   const resultBoxW = resultBoxWidth.value;
   const editorW = editorWidth.value;
   const viewWidth = resultBoxW + editorW;
   document.onmousemove = () => {
-    console.log(x.value);
     const finW: number = editorW + x.value - startX - 6;
 
     if (finW > leftborder && viewWidth - finW > rightBorder) {
@@ -156,6 +157,12 @@ const resizeResultBoxWidth = () => {
     }
     clearDocumentEvent();
   };
+};
+
+const minimalConsole = () => {
+  const viewHeight = consoleHeight.value + iframeHeight.value;
+  consoleHeight.value = -7;
+  iframeHeight.value = viewHeight - consoleHeight.value;
 };
 
 const getLanguage = (language: string): LanguageSupport => {
@@ -176,10 +183,6 @@ const changeCode = (newCode: string) => {
 onMounted(() => {
   watchWidthandHeight();
   window.addEventListener("resize", watchWidthandHeight);
-  console.log(
-    'document.querySelector("#editorHeight")',
-    document.querySelector("#editorHeight").clientHeight,
-  );
 });
 </script>
 

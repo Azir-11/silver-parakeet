@@ -22,6 +22,7 @@
         <n-icon
           :component="ArrowDown"
           class="align-middle h-4 cursor-pointer text-white"
+          @click="minimalConsole"
           title="最小化"
         ></n-icon>
       </div>
@@ -33,12 +34,12 @@
             <Editor
               :width="props.width"
               :language="javascript()"
-              :theme="consoleTheme"
               :is-editable="false"
+              :setup="consoleSetup"
               :model-value="typeof item.content === 'string' ? item.content : ''"
             ></Editor>
           </div>
-          <div v-if="item.type === 'log'" class="pl-4" v-html="item.logs"></div>
+          <div v-if="item.type === 'log'" class="pl-5" v-html="item.logs"></div>
         </div>
       </div>
     </n-scrollbar>
@@ -53,12 +54,16 @@ import { ArrowForward, ReorderFourOutline, Settings, Trash, ArrowDown } from "@v
 import type { consoleinfo } from "@/utils/webEditor/console";
 import { useConsole } from "@/hooks/webEditor/useConsole";
 import { javascript } from "@codemirror/lang-javascript";
-import { consoleTheme } from "../../components/editor/theme/projectTheme";
+import { consoleSetup } from "../editor/setup";
 const useConsoles = useConsole();
-const emits = defineEmits(["resizeConsole"]);
+const emits = defineEmits(["resizeConsole", "minimalConsole"]);
 
 const resize = (e: MouseEvent) => {
   emits("resizeConsole", e);
+};
+/** 最小化console */
+const minimalConsole = () => {
+  emits("minimalConsole");
 };
 
 const consoleInfos = computed<consoleinfo[]>(() => useConsoles.getConsoleInfo);

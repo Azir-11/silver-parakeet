@@ -8,17 +8,17 @@
 
 <script lang="ts" setup>
 import { PropType } from "vue";
-import { EditorView, basicSetup } from "codemirror";
+import { EditorView } from "codemirror";
 import type { ViewUpdate } from "@codemirror/view";
 import { EditorState, Facet } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
-import { foldAll, foldGutter, foldService, LanguageSupport } from "@codemirror/language";
-import { syntaxHighlighting } from "@codemirror/language";
+import { foldAll, LanguageSupport } from "@codemirror/language";
 import { Theme } from "./theme/projectTheme";
-import { projectHighlightStyle } from "./theme/projectHighlightStyle";
+import { basicSetup, emmetKeyMap } from "./setup";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
 import { syntaxTree } from "@codemirror/language";
-
+import { abbreviationTracker } from "@emmetio/codemirror6-plugin";
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
@@ -43,6 +43,10 @@ const props = defineProps({
   isEditable: {
     type: Boolean,
     default: true,
+  },
+  setup: {
+    type: Array as PropType<Extension[]>,
+    default: basicSetup,
   },
 });
 
@@ -105,17 +109,10 @@ onMounted(() => {
     state: EditorState.create({
       doc: props.modelValue,
       extensions: [
-        // basicSetup 是一套插件集合，包含了很多常用插件
-        basicSetup,
+        props.setup,
         props.language,
         globalJavaScriptCompletions,
-        // oneDarkTheme,
         props.theme,
-        // foldGutter({
-        //   openText: "收",
-        //   closedText: "开",
-        // }),
-        syntaxHighlighting(projectHighlightStyle),
         // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
         EditorView.updateListener.of((v: ViewUpdate) => {
           if (props.modelValue != v.state.doc.toString()) {
