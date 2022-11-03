@@ -1,5 +1,5 @@
 <template>
-  <div class="console bg-[#282c34] select-none w-full" :style="{ height: height + 'px' }">
+  <div class="console bg-[#282c34] w-full" :style="{ height: height + 'px' }">
     <div class="flex border-b-white border-solid border-0 border-b justify-between pr-2">
       <div class="inline-block h-auto">
         <n-icon :component="ArrowForward" class="align-middle h-4 text-white"></n-icon>
@@ -22,8 +22,8 @@
         <n-icon
           :component="ArrowDown"
           class="align-middle h-4 cursor-pointer text-white"
-          @click="minimalConsole"
           title="最小化"
+          @click="minimalConsole"
         ></n-icon>
       </div>
     </div>
@@ -39,7 +39,77 @@
               :model-value="typeof item.content === 'string' ? item.content : ''"
             ></Editor>
           </div>
-          <div v-if="item.type === 'log'" class="pl-5" v-html="item.logs"></div>
+          <div v-if="item.type === 'log' || item.type === 'dir'" class="flex">
+            <n-icon
+              :component="ChevronForwardOutline"
+              class="h-4 pt-0.75 pl-0.5 pr-4.5 align-middle inline"
+            ></n-icon>
+            <pre v-html="item.logs"></pre>
+          </div>
+          <div
+            v-if="item.type === 'info'"
+            class="flex color-[#2a53cd] w-full border-b-[#2a53cd] border-b-1"
+          >
+            <n-icon
+              :component="InformationCircle"
+              class="h-4 pt-1 pl-0.5 pr-4.5 align-middle inline"
+            ></n-icon>
+            <pre>{{ item.content }}</pre>
+          </div>
+          <!-- <div
+            v-if="item.type === 'system-error'"
+            class="flex color-[#2a53cd] w-full border-b-[#2a53cd] border-b-1"
+          >
+            <n-icon :component="Ban" class="h-4 pt-1 pl-0.5 pr-4.5 align-middle inline"></n-icon>
+            <pre class="">
+              <span class="">{{item.content}}</span>
+              <span class="row">row: {{item.row}}</span>
+              <span class="col">col: {{item.col}}</span>
+            </pre>
+          </div> -->
+          <div
+            v-if="item.type === 'error'"
+            class="flex color-[#ef6066] w-full border-b-[#ef6066] border-b-1"
+          >
+            <n-icon :component="Ban" class="h-4 pt-1 pl-0.5 pr-4.5 align-middle inline"></n-icon>
+            <pre>{{ item.content }}</pre>
+          </div>
+          <div
+            v-if="item.type === 'warn'"
+            class="flex color-[#f5a209] w-full border-b-[#f5a209] border-b-1"
+          >
+            <n-icon
+              :component="InformationCircle"
+              class="h-4 pt-1 pl-0.5 pr-4.5 align-middle inline"
+            ></n-icon>
+            <pre>{{ item.content }}</pre>
+          </div>
+          <div
+            v-if="item.type === 'print'"
+            class="flex color-[#f5a209] w-full border-b-[#f5a209] border-b-1"
+          >
+            <n-icon
+              :component="InformationCircle"
+              class="h-4 pt-1 pl-0.5 pr-4.5 align-middle inline"
+            ></n-icon>
+            <pre v-html="item.logs[0]"></pre>
+          </div>
+          <div
+            v-if="item.type === 'mixPrint'"
+            class="flex color-[#f5a209] w-full border-b-[#f5a209] border-b-1"
+          >
+            <n-icon
+              :component="ChevronForwardOutline"
+              class="h-4 pt-0.75 pl-0.5 pr-4.5 align-middle inline"
+            ></n-icon>
+            <Editor
+              :width="props.width"
+              :language="javascript()"
+              :is-editable="false"
+              :setup="consoleSetup"
+              :model-value="typeof item.content === 'string' ? item.content : ''"
+            ></Editor>
+          </div>
         </div>
       </div>
     </n-scrollbar>
@@ -50,7 +120,16 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowForward, ReorderFourOutline, Settings, Trash, ArrowDown } from "@vicons/ionicons5";
+import {
+  ArrowForward,
+  ReorderFourOutline,
+  Settings,
+  Trash,
+  ArrowDown,
+  ChevronForwardOutline,
+  InformationCircle,
+  Ban,
+} from "@vicons/ionicons5";
 import type { consoleinfo } from "@/utils/webEditor/console";
 import { useConsole } from "@/hooks/webEditor/useConsole";
 import { javascript } from "@codemirror/lang-javascript";

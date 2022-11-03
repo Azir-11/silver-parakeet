@@ -35,8 +35,8 @@
                 :width="editorWidth"
                 :language="getLanguage(item)"
                 :model-value="editorCode"
-                @change-code="changeCode"
                 :setup="item === 'HTML' ? htmlSetup : basicSetup"
+                @change-code="changeCode"
               />
             </div>
           </div>
@@ -160,6 +160,7 @@ const resizeResultBoxWidth = () => {
 };
 
 const minimalConsole = () => {
+  //最小化控制台
   const viewHeight = consoleHeight.value + iframeHeight.value;
   consoleHeight.value = -7;
   iframeHeight.value = viewHeight - consoleHeight.value;
