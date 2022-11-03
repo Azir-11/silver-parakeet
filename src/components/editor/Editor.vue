@@ -62,7 +62,6 @@ const dontCompleteIn = [
 ];
 
 function completeFromGlobalScope(context: any) {
-  console.log("context.state", context.state);
   let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
 
   if (

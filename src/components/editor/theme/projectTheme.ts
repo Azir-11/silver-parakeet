@@ -36,6 +36,9 @@ export const Theme = EditorView.theme({
     backgroundColor: "#282c34",
     color: "#9DA5B3",
   },
+  ".cm-line": {
+    fontFamily: "'JetBrainsMono'",
+  },
   // ".ͼc": {
   //   color: "#c678dd",
   // },

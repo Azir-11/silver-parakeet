@@ -53,7 +53,7 @@
         <Console
           :width="resultBoxWidth"
           :height="consoleHeight"
-          @minimal-Console="minimalConsole"
+          @minimal-console="minimalConsole"
           @resize-console="resizeConsoleHeight"
         ></Console>
       </div>

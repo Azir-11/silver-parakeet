@@ -6,7 +6,6 @@ import {
   initThemeSettings,
   setThemeSettings,
 } from "./helpers";
-console.log("1", initThemeSettings());
 
 export const useThemeStore = defineStore("theme-store", {
   state: () => initThemeSettings(),

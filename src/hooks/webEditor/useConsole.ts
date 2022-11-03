@@ -14,7 +14,6 @@ export const useConsole = defineStore("console", {
   actions: {
     setConsoleInfo(info: consoleinfo[]) {
       this.consoleInfo = info;
-      console.log(this.consoleInfo);
     },
   },
 });

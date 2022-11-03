@@ -14,7 +14,6 @@ export function createRouterGuards(router: Router) {
     const route = useRouteStore();
 
     if (!route.isInitAuthRoute) {
-      console.log("1", 1);
       await route.initAuthRoute();
 
       if (to.name === INVALID_PATH_NAME) {

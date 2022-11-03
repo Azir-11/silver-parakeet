@@ -86,7 +86,7 @@ export default class Consoles {
     // this.window.exeJSEncoderConsoleCmd = cmd => Function(`return (${cmd})`)()
     this.consoleMethods.forEach((item) => {
       iframeConsole[item] = (...arg) => {
-        console[item](...arg); // 在浏览器控制台打印日志
+        // console[item](...arg); // 在浏览器控制台打印日志
         switch (item) {
           case "time":
             this.setTimer(arg[0]);
@@ -155,7 +155,7 @@ export default class Consoles {
    * @returns {Array}
    */
   getLogs() {
-    console.log(this.consoleInfo);
+    // console.log(this.consoleInfo);
     return this.consoleInfo;
   }
   /**

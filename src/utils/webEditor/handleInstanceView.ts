@@ -12,7 +12,6 @@ class IframeHandler {
     if (!IframeHandler.instance) {
       this.iframe = iframe;
       IframeHandler.instance = this;
-      console.log(this);
     }
     return IframeHandler.instance;
   }

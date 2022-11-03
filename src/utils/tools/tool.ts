@@ -12,12 +12,10 @@
  */
 function debounce(func, delay) {
   let timer = null;
-  console.log(1);
   return function (...params) {
     let self = this;
     timer && clearTimeout(timer);
     timer = setTimeout(function () {
-      console.log(1);
       func.apply(self, params);
     }, delay);
   };
@@ -60,6 +58,7 @@ function judgeCyclic(obj) {
     }
     stackSet.add(obj);
     for (let key in obj) {
+      // eslint-disable-next-line no-prototype-builtins
       if (obj.hasOwnProperty(key)) {
         detect(obj[key]);
       }
