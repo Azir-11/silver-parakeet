@@ -35,8 +35,8 @@
                 :width="editorWidth"
                 :language="getLanguage(item)"
                 :model-value="editorCode"
-                @change-code="changeCode"
                 :setup="item === 'HTML' ? htmlSetup : basicSetup"
+                @change-code="changeCode"
               />
             </div>
           </div>
@@ -53,7 +53,7 @@
         <Console
           :width="resultBoxWidth"
           :height="consoleHeight"
-          @minimal-Console="minimalConsole"
+          @minimal-console="minimalConsole"
           @resize-console="resizeConsoleHeight"
         ></Console>
       </div>

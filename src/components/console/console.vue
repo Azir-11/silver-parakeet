@@ -22,8 +22,8 @@
         <n-icon
           :component="ArrowDown"
           class="align-middle h-4 cursor-pointer text-white"
-          @click="minimalConsole"
           title="最小化"
+          @click="minimalConsole"
         ></n-icon>
       </div>
     </div>

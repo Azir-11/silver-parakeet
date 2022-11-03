@@ -19,7 +19,7 @@ module.exports = {
   },
   plugins: ["vue", "@typescript-eslint"],
   rules: {
-    'no-undef': 'off',
+    "no-undef": "off",
     semi: [1],
     camelcase: 0,
     // 屏蔽文件名必须为驼峰
@@ -28,5 +28,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": [0],
     // 允许出现未使用的变量
     "no-unused-vars": 0,
+    // 忽略本项目中的v-html警告
+    "vue/no-v-html": "off",
   },
 };
