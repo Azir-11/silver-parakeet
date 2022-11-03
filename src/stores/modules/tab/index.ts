@@ -82,7 +82,6 @@ export const useTabStore = defineStore({
     },
     closeAllTabs() {
       // 关闭全部
-      console.log(retainAffixRoute(this.tabsList));
       this.tabsList = retainAffixRoute(this.tabsList);
     },
   },
