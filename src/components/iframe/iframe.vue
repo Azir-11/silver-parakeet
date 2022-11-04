@@ -70,6 +70,21 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   const IFramesHandler = new IframeHandler(iframe);
   const IframeConsole = new Consoles(iframe);
   useConsole().setConsoleInfo([]);
+  const onerror = (msg: string, _, row: number, col: number) => {
+    IframeConsole.consoleInfo.push({
+      type: "system-error",
+      content: msg,
+      row,
+      col,
+    });
+    return void 0;
+  };
+  const onunhandledrejection = (e) => {
+    IframeConsole.consoleInfo.push({
+      type: "error",
+      content: `Unhandled promise rejection: ${e.reason}`,
+    });
+  };
   let HTMLCode = editorTotalCode.value[0].code,
     CSSCode = editorTotalCode.value[1].code,
     JSCode = editorTotalCode.value[2].code;
@@ -87,7 +102,12 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   setTimeout(async () => {
     IframeConsole.clear();
     IframeConsole.refresh(iframe);
-    await IFramesHandler.insertCode({ HTMLCode, CSSCode, JSCode });
+    await IFramesHandler.insertCode(
+      { HTMLCode, CSSCode, JSCode },
+      false,
+      onerror,
+      onunhandledrejection,
+    );
     useConsole().setConsoleInfo(IframeConsole.getLogs());
   }, 200);
 };

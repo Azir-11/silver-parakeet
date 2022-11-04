@@ -26,11 +26,13 @@ class IframeHandler {
    * @param {Function} onerror 代码执行异常监听函数
    * @param {Function} onunhandledrejection Promise执行异常监听函数
    */
-  async insertCode(code) {
+  async insertCode(code, isMD: boolean, onerror: any, onunhandledrejection: any) {
     const { HTMLCode, CSSCode, JSCode } = code;
     const iWin: Window = this.iframe.contentWindow;
     const iDoc = iWin.document;
     iDoc.open();
+    iWin.onerror = onerror;
+    iWin.onunhandledrejection = onunhandledrejection;
     // 在执行js脚本前向iframe注入错误监听回调函数
     iDoc.write(`
     <!DOCTYPE html>

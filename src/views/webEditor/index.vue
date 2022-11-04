@@ -95,8 +95,6 @@ const resultBoxWidth = ref<number>(0);
 const watchWidthandHeight = () => {
   editorWidth.value = document.body.clientWidth / 2;
   resultBoxWidth.value = document.body.clientWidth - editorWidth.value - 60;
-  iframeHeight.value = ASideRef.value.firstElementChild.clientHeight;
-  consoleHeight.value = ASideRef.value.scrollHeight - iframeHeight.value - 34;
 }; //监听宽度和高度
 
 const editorActiveIndex = computed(() => webCodeStore.index);
@@ -183,6 +181,8 @@ const changeCode = (newCode: string) => {
 
 onMounted(() => {
   watchWidthandHeight();
+  iframeHeight.value = ASideRef.value.firstElementChild.clientHeight;
+  consoleHeight.value = ASideRef.value.scrollHeight - iframeHeight.value - 34;
   window.addEventListener("resize", watchWidthandHeight);
 });
 </script>

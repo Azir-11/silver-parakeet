@@ -133,4 +133,29 @@ const consoleSetup: Extension[] = (() => [
   ]),
 ])();
 
-export { basicSetup, consoleSetup, emmetKeyMap, htmlSetup };
+const exeCmdSetup: Extension[] = (() => [
+  //控制台配置,添加了自己的语法高亮
+  highlightSpecialChars(),
+  history(),
+  drawSelection(),
+  dropCursor(),
+  EditorState.allowMultipleSelections.of(true),
+  indentOnInput(),
+  syntaxHighlighting(projectHighlightStyle, { fallback: true }),
+  bracketMatching(),
+  closeBrackets(),
+  autocompletion(),
+  rectangularSelection(),
+  highlightSelectionMatches(),
+  keymap.of([
+    ...closeBracketsKeymap,
+    ...defaultKeymap,
+    ...searchKeymap,
+    ...historyKeymap,
+    ...foldKeymap,
+    ...completionKeymap,
+    ...lintKeymap,
+  ]),
+])();
+
+export { basicSetup, consoleSetup, emmetKeyMap, htmlSetup, exeCmdSetup };

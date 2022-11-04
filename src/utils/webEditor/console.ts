@@ -22,6 +22,8 @@ export interface consoleinfo {
   type?: string;
   logs?: string | string[];
   content?: string | string[];
+  row?: number;
+  col?: number;
 }
 
 interface ConsoleInstance {

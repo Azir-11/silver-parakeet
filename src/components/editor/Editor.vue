@@ -1,24 +1,18 @@
 <template>
-  <div
-    ref="editorDom"
-    :class="`h-full`"
-    :style="`width:${width}px;font-family: JetBrainsMono;`"
-  ></div>
+  <div ref="editorDom" :style="`width:${width}px;font-family: JetBrainsMono;`"></div>
 </template>
 
 <script lang="ts" setup>
 import { PropType } from "vue";
 import { EditorView } from "codemirror";
 import type { ViewUpdate } from "@codemirror/view";
-import { EditorState, Facet } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
 import { foldAll, LanguageSupport } from "@codemirror/language";
 import { Theme } from "./theme/projectTheme";
-import { basicSetup, emmetKeyMap } from "./setup";
+import { basicSetup } from "./setup";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
-import { html } from "@codemirror/lang-html";
 import { syntaxTree } from "@codemirror/language";
-import { abbreviationTracker } from "@emmetio/codemirror6-plugin";
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
