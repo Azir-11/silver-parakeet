@@ -130,7 +130,7 @@
         class="pt-0.75"
         @change-code="changeCode"
       ></Editor>
-      <div class="flex self-center mt-1 mr-1">
+      <div class="flex self-center mt-1 mr-1 justify-end w-full flex-gap-1">
         <n-button :disabled="!consoleValue" :focusable="false" @click="exeCmd">润!</n-button>
       </div>
     </div>
@@ -153,9 +153,10 @@ import { useConsole } from "@/hooks/webEditor/useConsole";
 import { javascript } from "@codemirror/lang-javascript";
 import { consoleSetup, exeCmdSetup } from "../editor/setup";
 import Consoles from "@/utils/webEditor/console";
+import { MaybeElement, useResizeObserver } from "@vueuse/core";
 const useConsoles = useConsole();
 const emits = defineEmits(["resizeConsole", "minimalConsole"]);
-const cmdRef = ref<HTMLElement>(null);
+const cmdRef = ref(null);
 const consoleValue = ref<string>("");
 const consoleInfos = computed<consoleinfo[]>(() => useConsoles.getConsoleInfo);
 const cmdHeight = ref<number>(29);
@@ -197,19 +198,12 @@ const exeCmd = () => {
   }
 };
 
-const getCmdHeight = () => {
-  //获取cmd的长度
-  nextTick(() => {
-    if (cmdRef.value) {
-      cmdHeight.value = cmdRef.value.clientHeight;
-    }
-  });
-};
 onMounted(() => {
-  let resizeObserver = new ResizeObserver(() => {
-    getCmdHeight();
+  useResizeObserver(cmdRef.value, (entries) => {
+    const entry = entries[0];
+    const { height } = entry.contentRect;
+    cmdHeight.value = height;
   });
-  resizeObserver.observe(cmdRef.value as any);
 });
 </script>
 
