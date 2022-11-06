@@ -44,7 +44,7 @@
       </div>
       <!-- resizeBar -->
       <div
-        class="w-24 h-full transition-colors duration-300 cursor-w-resize"
+        class="w-[6px] h-full transition-colors duration-300 cursor-w-resize"
         :class="editorStates.resizeBarShow ? 'bg-[#5e9cfb]' : 'bg-[#282c34]'"
         @mousedown="resizeResultBoxWidth"
       ></div>
@@ -137,7 +137,7 @@ const resizeConsoleHeight = () => {
  * @param rightBorder 右边界
  */
 const resizeResultBoxWidth = () => {
-  const leftborder = 218,
+  const leftborder = 240,
     rightBorder = 180;
   editorStates.value.iframeVisible = true;
   editorStates.value.iframeWidthShow = true;

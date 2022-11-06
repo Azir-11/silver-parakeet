@@ -109,7 +109,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
       onunhandledrejection,
     );
     useConsole().setConsoleInfo(IframeConsole.getLogs());
-  }, 200);
+  }, 500);
 };
 </script>
 
