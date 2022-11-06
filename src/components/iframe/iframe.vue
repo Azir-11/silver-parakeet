@@ -29,6 +29,8 @@ import { compileHTML, compileJS, compileCSS } from "@/utils/webEditor/compiler";
 import Consoles from "@/utils/webEditor/console";
 import { format } from "@/utils/webEditor/codeFormatter";
 import type { State } from "@/types/editor";
+import { debounce } from "@/utils/tools/tool";
+
 const props = defineProps({
   width: {
     type: Number,
@@ -54,22 +56,19 @@ const iframeRef = ref(null);
 let timer, timer2;
 onMounted(() => {
   runCode(iframeRef.value);
-  watch(editorTotalCode.value, (_newValue, _oldValue) => {
-    timer && clearTimeout(timer);
-    timer2 && clearTimeout(timer2);
-    timer2 = setTimeout(() => {
-      timer = setTimeout(() => {
-        iframeRef.value.src = "/html/instance.html";
-        runCode(iframeRef.value);
-      }, 500);
-    }, 100); //来个好心人帮我解一下屎吧
-  });
+  watch(
+    editorTotalCode.value,
+    debounce(() => {
+      runCode(iframeRef.value);
+    }, 500),
+  );
 });
 
 const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   const IFramesHandler = new IframeHandler(iframe);
   const IframeConsole = new Consoles(iframe);
   useConsole().setConsoleInfo([]);
+  iframe.src = "/html/instance.html";
   const onerror = (msg: string, _, row: number, col: number) => {
     IframeConsole.consoleInfo.push({
       type: "system-error",
@@ -99,6 +98,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
       JSCode = res;
     });
   }
+
   setTimeout(async () => {
     IframeConsole.clear();
     IframeConsole.refresh(iframe);

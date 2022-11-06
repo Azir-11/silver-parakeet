@@ -127,7 +127,7 @@
         :is-editable="true"
         :setup="exeCmdSetup"
         :model-value="consoleValue"
-        class="pt-0.75"
+        class="pt-0.75 w-[80%]"
         @change-code="changeCode"
       ></Editor>
       <div class="flex self-center mt-1 mr-1 justify-end w-full flex-gap-1">
