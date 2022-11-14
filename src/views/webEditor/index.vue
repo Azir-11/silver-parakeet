@@ -148,7 +148,6 @@ const resizeResultBoxWidth = () => {
   const viewWidth = resultBoxW + editorW;
   document.onmousemove = () => {
     const finW: number = editorW + x.value - startX - 6;
-
     if (finW > leftborder && viewWidth - finW > rightBorder) {
       editorWidth.value = finW;
       resultBoxWidth.value = viewWidth - finW;

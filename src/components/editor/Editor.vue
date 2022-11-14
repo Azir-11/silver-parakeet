@@ -13,6 +13,8 @@ import { Theme } from "./theme/projectTheme";
 import { basicSetup } from "./setup";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
+let editor: EditorView; //将editor移出来可进行更多操作,如获取行数等
+
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
@@ -95,30 +97,40 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
   autocomplete: completeFromGlobalScope,
 });
 
+const resetEditorDoc = () => {
+  //cmd清空值
+  editor.setState(editorState);
+};
+
+defineExpose({
+  resetEditorDoc,
+});
+
+const editorState = EditorState.create({
+  //为了实现cmd功能重置值,将editorState移出来可更新state
+  doc: props.modelValue,
+  extensions: [
+    props.setup,
+    props.language,
+    globalJavaScriptCompletions,
+    props.theme,
+    // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
+    EditorView.updateListener.of((v: ViewUpdate) => {
+      if (props.modelValue != v.state.doc.toString()) {
+        emit("changeCode", v.state.doc.toString());
+      } else {
+        // console.log("数据没更新");
+      }
+    }),
+    EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
+  ],
+});
 onMounted(() => {
   //初始化编辑器实例
-  const editor = new EditorView({
+  editor = new EditorView({
     parent: editorDom.value,
-    state: EditorState.create({
-      doc: props.modelValue,
-      extensions: [
-        props.setup,
-        props.language,
-        globalJavaScriptCompletions,
-        props.theme,
-        // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
-        EditorView.updateListener.of((v: ViewUpdate) => {
-          if (props.modelValue != v.state.doc.toString()) {
-            emit("changeCode", v.state.doc.toString());
-          } else {
-            // console.log("数据没更新");
-          }
-        }),
-        EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
-      ],
-    }),
+    state: editorState,
   });
-
   if (!props.isEditable) {
     foldAll(editor);
   }

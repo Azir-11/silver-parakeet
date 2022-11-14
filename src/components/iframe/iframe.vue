@@ -1,18 +1,36 @@
 <template>
   <div
-    class="iframe origin-top-right select-none w-full relative"
+    :class="fullScreenState ? 'full-screen' : 'iframe origin-top-right select-none w-full relative'"
     :style="{ height: height + 'px' }"
   >
     <div v-if="isVisible.iframeVisible" class="iframeVisible"></div>
     <div v-if="isVisible.iframeWidthShow" class="absolute left-0 bottom-0 bg-black text-white">
       {{ width }}px
     </div>
-    <div class="h-[42px]">iframe头部预留功能区</div>
+    <div class="h-[42px] flex justify-end bg-white dark:bg-[#18181c]">
+      <div class="self-center">
+        <n-icon
+          :component="Refresh"
+          class="mr-3 cursor-pointer"
+          :size="20"
+          title="刷新"
+          @click="refreshIframe"
+        ></n-icon>
+        <n-icon
+          :component="Resize"
+          class="mr-3 cursor-pointer"
+          :size="20"
+          title="全屏"
+          @click="fullScreenIframe"
+        ></n-icon>
+      </div>
+    </div>
     <iframe
       ref="iframeRef"
       :width="`${width}px`"
       :height="`${height - 42}px`"
       class="border-none bg-white"
+      :class="fullScreenState ? 'wh-full' : ''"
       src="/html/instance.html"
     >
     </iframe>
@@ -30,6 +48,7 @@ import Consoles from "@/utils/webEditor/console";
 import { format } from "@/utils/webEditor/codeFormatter";
 import type { State } from "@/types/editor";
 import { debounce } from "@/utils/tools/tool";
+import { Refresh, Resize } from "@vicons/ionicons5";
 
 const props = defineProps({
   width: {
@@ -47,13 +66,21 @@ const props = defineProps({
 });
 
 const webCodes = useWebCodes();
-
+const fullScreenState = ref<boolean>(false);
 const editorTotalCode: ComputedRef<codeItem> = computed(() => {
   return webCodes.getTotalCode;
 });
 
+const refreshIframe = () => {
+  //刷新iframe
+  runCode(iframeRef.value);
+};
+
+const fullScreenIframe = () => {
+  fullScreenState.value = !fullScreenState.value;
+}; //最大化iframe
+
 const iframeRef = ref(null);
-let timer, timer2;
 onMounted(() => {
   runCode(iframeRef.value);
   watch(
@@ -78,7 +105,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
     });
     return void 0;
   };
-  const onunhandledrejection = (e) => {
+  const onunhandledrejection = (e: any) => {
     IframeConsole.consoleInfo.push({
       type: "error",
       content: `Unhandled promise rejection: ${e.reason}`,
@@ -120,5 +147,13 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   height: v-bind(height + "px");
   background-color: rgb(0, 0, 0, 0.5);
   opacity: 0.5;
+}
+.full-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>

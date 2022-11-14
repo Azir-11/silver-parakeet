@@ -24,11 +24,6 @@
           ></n-icon>
         </n-dropdown>
         <n-icon
-          :component="Settings"
-          class="align-middle h-4 mr-1 cursor-pointer text-white"
-          title="设置"
-        ></n-icon>
-        <n-icon
           :component="Trash"
           class="align-middle h-4 mr-1 cursor-pointer text-white"
           title="清空控制台"
@@ -124,11 +119,12 @@
       </div>
 
       <Editor
+        ref="cmd"
         :language="javascript()"
         :is-editable="true"
         :setup="exeCmdSetup"
         :model-value="consoleValue"
-        class="w-[80%]"
+        :width="cmdWidth"
         @change-code="changeCode"
       ></Editor>
       <div class="flex self-center mt-1 mr-1 justify-end">
@@ -199,10 +195,12 @@ const filter = ref([
 const useConsoles = useConsole();
 const emits = defineEmits(["resizeConsole", "minimalConsole"]);
 const cmdRef = ref(null);
+const cmd = ref(null);
 const showDropDown = ref<boolean>(false);
 const consoleValue = ref<string>("");
 const consoleInfos = computed<consoleinfo[]>(() => useConsoles.getConsoleInfo);
 const cmdHeight = ref<number>(29);
+const cmdWidth = ref<number>(0);
 const props = defineProps({
   width: {
     type: Number,
@@ -241,6 +239,8 @@ const exeCmd = () => {
     const consoles = new Consoles();
     consoles.exeCmd(consoleValue.value.trim());
     consoleValue.value = "";
+    cmd.value.resetEditorDoc();
+    // cmdRef.value.resetEditorDoc();
     useConsoles.setConsoleInfo(consoles.getLogs());
   }
 };
@@ -253,8 +253,9 @@ const filterChange = (key: number) => {
 onMounted(() => {
   useResizeObserver(cmdRef.value, (entries) => {
     const entry = entries[0];
-    const { height } = entry.contentRect;
+    const { width, height } = entry.contentRect;
     cmdHeight.value = height;
+    cmdWidth.value = width * 0.95;
   });
 });
 </script>
