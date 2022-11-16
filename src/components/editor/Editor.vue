@@ -134,6 +134,10 @@ onMounted(() => {
   if (!props.isEditable) {
     foldAll(editor);
   }
+  editor.focus();
+});
+onUnmounted(() => {
+  editor.destroy();
 });
 </script>
 

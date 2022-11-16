@@ -152,8 +152,10 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 99999;
+  z-index: 1010;
   width: 100% !important;
+  padding-left: 64px;
+  padding-top: 32px;
   height: 100% !important;
 }
 </style>
