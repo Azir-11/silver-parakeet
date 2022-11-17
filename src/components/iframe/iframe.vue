@@ -49,6 +49,8 @@ import { format } from "@/utils/webEditor/codeFormatter";
 import type { State } from "@/types/editor";
 import { debounce } from "@/utils/tools/tool";
 import { Refresh, Resize } from "@vicons/ionicons5";
+import { NIcon } from "naive-ui";
+import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
 
 const props = defineProps({
   width: {
@@ -64,7 +66,7 @@ const props = defineProps({
     default: () => {},
   },
 });
-
+const WebEditorStates = useWebEditorStates();
 const webCodes = useWebCodes();
 const fullScreenState = ref<boolean>(false);
 const editorTotalCode: ComputedRef<codeItem> = computed(() => {
@@ -136,7 +138,32 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
       onunhandledrejection,
     );
     useConsole().setConsoleInfo(IframeConsole.getLogs());
+    const { error, info, warn } = logMsg();
+    WebEditorStates.setLogsMsg(error, warn, info);
   }, 500);
+};
+const logMsg = () => {
+  const msgMap = ["info", "error", "system-error", "warn"];
+  const logMsgCount = {
+    info: 0,
+    error: 0,
+    warn: 0,
+  };
+  const logInfo = useConsole().getConsoleInfo;
+  logInfo.forEach((item) => {
+    switch (item.type) {
+      case msgMap[0]:
+        logMsgCount.info++;
+        break;
+      case msgMap[1] || msgMap[2]:
+        logMsgCount.error++;
+        break;
+      case msgMap[3]:
+        logMsgCount.warn++;
+    }
+  });
+  console.log(logMsgCount);
+  return logMsgCount;
 };
 </script>
 

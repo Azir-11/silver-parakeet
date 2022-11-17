@@ -5,16 +5,16 @@
 <script lang="ts" setup>
 import { PropType } from "vue";
 import { EditorView } from "codemirror";
-import type { ViewUpdate } from "@codemirror/view";
-import { EditorState } from "@codemirror/state";
+import { lineNumbers, ViewUpdate } from "@codemirror/view";
+import { countColumn, EditorState, StateEffect, Text } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
-import { foldAll, LanguageSupport } from "@codemirror/language";
+import { foldAll, LanguageSupport, StringStream } from "@codemirror/language";
 import { Theme } from "./theme/projectTheme";
 import { basicSetup } from "./setup";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
+import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
 let editor: EditorView; //将editor移出来可进行更多操作,如获取行数等
-
 const props = defineProps({
   // 编译器内的文本
   modelValue: {
@@ -44,11 +44,16 @@ const props = defineProps({
     type: Array as PropType<Extension[]>,
     default: basicSetup,
   },
+  isCmd: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const editorDom = ref(null);
 const emit = defineEmits(["changeCode"]);
 const completePropertyAfter = ["PropertyName", ".", "?."];
+const webEditorState = useWebEditorStates();
 const dontCompleteIn = [
   "TemplateString",
   "LineComment",
@@ -106,6 +111,10 @@ defineExpose({
   resetEditorDoc,
 });
 
+const offsetToPos = (doc: Text, offset: number) => {
+  let line = doc.lineAt(offset);
+  return { line: line.number - 1, ch: offset - line.from };
+}; //codemirror6和5的区别在于,6需要自己手动计算行和列,通过lineAt传参offset(光标所指向的当前是第几个字符串)来判定当前是在哪一行
 const editorState = EditorState.create({
   //为了实现cmd功能重置值,将editorState移出来可更新state
   doc: props.modelValue,
@@ -116,10 +125,13 @@ const editorState = EditorState.create({
     props.theme,
     // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
     EditorView.updateListener.of((v: ViewUpdate) => {
+      if (props.isEditable && !props.isCmd) {
+        const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
+        webEditorState.setLines(line, ch);
+      }
+
       if (props.modelValue != v.state.doc.toString()) {
         emit("changeCode", v.state.doc.toString());
-      } else {
-        // console.log("数据没更新");
       }
     }),
     EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
@@ -135,9 +147,6 @@ onMounted(() => {
     foldAll(editor);
   }
   editor.focus();
-});
-onUnmounted(() => {
-  editor.destroy();
 });
 </script>
 

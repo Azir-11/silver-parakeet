@@ -125,6 +125,7 @@
         :setup="exeCmdSetup"
         :model-value="consoleValue"
         :width="cmdWidth"
+        :is-cmd="true"
         @change-code="changeCode"
       ></Editor>
       <div class="flex self-center mt-1 mr-1 justify-end">

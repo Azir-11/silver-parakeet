@@ -18,7 +18,7 @@
     />
     <GlobalFooter
       v-if="footer.visible"
-      class="z-1002 w-screen bottom-0 bg-white dark:bg-[#282c34]"
+      class="z-1002 w-screen bottom-0 bg-white dark:bg-[#2a53cd]"
       :style="`padding-left:${activemenuWidth}px;height:${footer.height}px`"
     />
   </section>
