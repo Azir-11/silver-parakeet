@@ -107,8 +107,35 @@ const resetEditorDoc = () => {
   editor.setState(editorState);
 };
 
+const refreshEditorDoc = (text: string) => {
+  const editorState = EditorState.create({
+    //为了实现cmd功能重置值,将editorState移出来可更新state
+    doc: text,
+    extensions: [
+      props.setup,
+      props.language,
+      globalJavaScriptCompletions,
+      props.theme,
+      // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
+      EditorView.updateListener.of((v: ViewUpdate) => {
+        if (props.isEditable && !props.isCmd) {
+          const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
+          webEditorState.setLines(line, ch);
+        }
+
+        if (props.modelValue != v.state.doc.toString()) {
+          emit("changeCode", v.state.doc.toString());
+        }
+      }),
+      EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
+    ],
+  });
+  editor.setState(editorState);
+};
+
 defineExpose({
   resetEditorDoc,
+  refreshEditorDoc,
 });
 
 const offsetToPos = (doc: Text, offset: number) => {

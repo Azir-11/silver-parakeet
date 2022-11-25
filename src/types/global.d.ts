@@ -12,4 +12,6 @@ interface Window {
   eval(args: any): any;
   console: Console;
   prettierPlugins: any;
+  $dialog: any;
+  $message: any;
 }

@@ -32,6 +32,7 @@
             >
               <Editor
                 :id="'editor'"
+                ref="editorRef"
                 :width="editorWidth"
                 :language="getLanguage(item)"
                 :model-value="editorCode"
@@ -81,6 +82,9 @@ app.setSiderCollapse(false);
 theme.setDarkMode(true);
 
 // 标签页列表
+
+const editorRef = ref(null);
+
 const webCodeStore = useWebCodes();
 
 const changeMode = (index: number) => {
@@ -183,6 +187,14 @@ onMounted(() => {
   iframeHeight.value = ASideRef.value.firstElementChild.clientHeight;
   consoleHeight.value = ASideRef.value.scrollHeight - iframeHeight.value - 34;
   window.addEventListener("resize", watchWidthandHeight);
+
+  watch(
+    () => webCodeStore.getModeCode,
+    () => {
+      editorRef.value[0].refreshEditorDoc(editorCode.value);
+    },
+    { deep: true },
+  );
 });
 </script>
 

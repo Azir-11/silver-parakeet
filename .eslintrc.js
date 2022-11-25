@@ -20,6 +20,7 @@ module.exports = {
   plugins: ["vue", "@typescript-eslint"],
   rules: {
     "no-undef": "off",
+    "no-useless-escape": 0,
     semi: [1],
     camelcase: 0,
     // 屏蔽文件名必须为驼峰

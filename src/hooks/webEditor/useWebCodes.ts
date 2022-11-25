@@ -50,5 +50,10 @@ export const useWebCodes = defineStore({
     setIndex(value: number) {
       this.index = value;
     },
+    setTotalCode(datas: { HTML: string; CSS: string; JS: string }) {
+      this.codeList[0].code = datas.HTML;
+      this.codeList[1].code = datas.CSS;
+      this.codeList[2].code = datas.JS;
+    },
   },
 });

@@ -10,6 +10,13 @@
     <div class="h-[42px] flex justify-end bg-white dark:bg-[#18181c]">
       <div class="self-center">
         <n-icon
+          :component="CloudUploadOutline"
+          class="mr-3 cursor-pointer"
+          :size="20"
+          title="上传"
+          @click="showUpLoad"
+        ></n-icon>
+        <n-icon
           :component="Refresh"
           class="mr-3 cursor-pointer"
           :size="20"
@@ -40,7 +47,7 @@
 <script setup lang="ts">
 import { useWebCodes } from "@/hooks/webEditor/useWebCodes";
 import type { codeItem } from "@/hooks/webEditor/useWebCodes";
-import type { ComputedRef, PropType } from "vue";
+import { ComputedRef, PropType, render } from "vue";
 import { useConsole } from "@/hooks/webEditor/useConsole";
 import IframeHandler from "@/utils/webEditor/handleInstanceView";
 import { compileHTML, compileJS, compileCSS } from "@/utils/webEditor/compiler";
@@ -48,9 +55,11 @@ import Consoles from "@/utils/webEditor/console";
 import { format } from "@/utils/webEditor/codeFormatter";
 import type { State } from "@/types/editor";
 import { debounce } from "@/utils/tools/tool";
-import { Refresh, Resize } from "@vicons/ionicons5";
+import { Refresh, Resize, CloudUploadOutline } from "@vicons/ionicons5";
 import { NIcon } from "naive-ui";
 import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
+import Uploader from "../uploader/uploader.vue";
+import { renderIcon } from "@/utils";
 
 const props = defineProps({
   width: {
@@ -162,8 +171,15 @@ const logMsg = () => {
         logMsgCount.warn++;
     }
   });
-  console.log(logMsgCount);
   return logMsgCount;
+};
+
+const showUpLoad = () => {
+  window.$dialog.success({
+    title: "上传文件",
+    icon: () => h(CloudUploadOutline),
+    content: () => h(Uploader),
+  });
 };
 </script>
 
