@@ -1,11 +1,11 @@
 const HttpUrl = /^((?!\\|\/|:|\*|\?|<|>|\|).){1,255}$/;
 
 export interface fileInfos {
-  html: string;
-  css: string;
-  js: string;
-  links: string[];
-  scripts: string[];
+  html?: string;
+  css?: string;
+  js?: string;
+  links?: string[];
+  scripts?: string[];
 }
 interface fileResult {
   content: fileInfos | string | ArrayBuffer;

@@ -42,13 +42,7 @@ const chooseFile = (data: { fileList: UploadFileInfo[] }) => {
 
 const upload = async () => {
   const fileList = filterFileList.value;
-  const codeObj: fileInfos = {
-    html: "",
-    css: "",
-    js: "",
-    links: [],
-    scripts: [],
-  };
+  const codeObj: fileInfos = {};
   await uploader(fileList, true)
     .then((res) => {
       const { HTML, CSS, JavaScript } = res;
@@ -65,7 +59,9 @@ const upload = async () => {
         codeObj.js = JavaScript.content as string;
       }
       const { html, css, js } = codeObj;
-      webCodes.setTotalCode({ HTML: html, CSS: css, JS: js });
+      if (html) webCodes.setIndexModeCode(0, html);
+      if (css) webCodes.setIndexModeCode(1, css);
+      if (js) webCodes.setIndexModeCode(2, js);
       window.$message.success("上传成功,所有文件都上传完毕");
     })
     .catch(() => {

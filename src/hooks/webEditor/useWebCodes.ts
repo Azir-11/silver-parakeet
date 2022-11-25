@@ -55,5 +55,8 @@ export const useWebCodes = defineStore({
       this.codeList[1].code = datas.CSS;
       this.codeList[2].code = datas.JS;
     },
+    setIndexModeCode(index: number, newCode: string) {
+      this.codeList[index].code = newCode;
+    },
   },
 });
