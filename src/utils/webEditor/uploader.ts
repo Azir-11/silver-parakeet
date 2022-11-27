@@ -1,4 +1,5 @@
-const HttpUrl = /^((?!\\|\/|:|\*|\?|<|>|\|).){1,255}$/;
+const HttpUrl =
+  /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
 
 export interface fileInfos {
   html?: string;
@@ -154,7 +155,8 @@ const resolveHTML = (content: string) => {
   if (result && result.length === 2) tmpCode = result[1];
   html = tmpCode.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
   // css
-  result = /<style>(([\s\S])*?)<\/style>/g.exec(content);
+  result = /<style[^>]*>(([\s\S])*?)<\/style>/g.exec(content);
+  console.log(result);
   if (result && result.length >= 2) css = result[1];
   // external css
   const linkList = content.match(/<link.*?(?:>|\/>)/gi);
@@ -178,12 +180,15 @@ const resolveHTML = (content: string) => {
     }
   }
   // external js
-  const scriptList = content.match(/<script.*?(?:>|\/>)\<\/script\>/gi);
+  const scriptList = content.match(
+    /<script(?:.*?)src=[\"\'](.+?)[\"\'](?!<)(?:.*)\>(?:[\n\r\s]*?)(?:<\/script>)*/gm,
+  );
   const scripts: string[] = [];
   if (scriptList) {
     let url = "";
     for (let i = 0, content: string; (content = scriptList[i++]); ) {
       result = content.match(/<script .*?src=\"(.+?)\"/);
+      console.log("result", result);
       if (result && result.length === 2) url = result[1];
       if (HttpUrl.test(url)) scripts.push(url);
     }

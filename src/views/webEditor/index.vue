@@ -5,7 +5,7 @@
         <nav class="pl-8">
           <n-tabs type="line">
             <n-tab
-              v-for="(item, index) in webCodeStore.getModes"
+              v-for="(item, index) in webCodeStore.getTeamplateModes"
               :key="index"
               :name="item"
               @click="changeMode(index)"
@@ -73,6 +73,7 @@ import type { LanguageSupport } from "@codemirror/language";
 import { useMouse } from "@vueuse/core";
 import type { State } from "@/types/editor";
 import { useAppStore, useThemeStore } from "@/stores";
+import { useUpLoadState } from "@/hooks/webEditor/useUpLoadState";
 
 const app = useAppStore();
 const theme = useThemeStore();
@@ -86,7 +87,7 @@ theme.setDarkMode(true);
 const editorRef = ref(null);
 
 const webCodeStore = useWebCodes();
-
+const upLoadState = useUpLoadState();
 const changeMode = (index: number) => {
   webCodeStore.setIndex(index);
 };
@@ -96,15 +97,18 @@ const ASideRef = ref<HTMLElement>(null); //iframe+控制台高度
 const iframeHeight = ref<number>(480);
 const editorWidth = ref<number>(0);
 const resultBoxWidth = ref<number>(0);
+
 const watchWidthandHeight = () => {
   editorWidth.value = document.body.clientWidth / 2;
   resultBoxWidth.value = document.body.clientWidth - editorWidth.value - 60;
 }; //监听宽度和高度
 
 const editorActiveIndex = computed(() => webCodeStore.index);
-const editorModes = computed(() => webCodeStore.getModes);
+const editorModes = computed(() => webCodeStore.getTeamplateModes);
 const editorCode = computed(() => webCodeStore.getModeCode);
 /** 这三个变量editor的 */
+
+const isUpload = computed(() => upLoadState.isUpLoad); //是否上传(上传之后要刷新一下当前选中的页面)
 
 const { x, y } = useMouse(); //vueuse获取document的鼠标的x,y轴
 const editorStates = ref<State>({
@@ -189,11 +193,12 @@ onMounted(() => {
   window.addEventListener("resize", watchWidthandHeight);
 
   watch(
-    () => webCodeStore.getModeCode,
+    () => isUpload.value,
     () => {
-      editorRef.value[0].refreshEditorDoc(editorCode.value);
+      if (isUpload.value) {
+        editorRef.value[0].refreshEditorDoc(editorCode.value);
+      }
     },
-    { deep: true },
   );
 });
 </script>

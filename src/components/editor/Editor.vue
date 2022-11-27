@@ -23,7 +23,7 @@ const props = defineProps({
   },
   // 语言模式
   language: {
-    type: LanguageSupport,
+    type: Object as PropType<LanguageSupport>,
     default: javascriptLanguage,
   },
   // 主题
@@ -102,6 +102,25 @@ const globalJavaScriptCompletions = javascriptLanguage.data.of({
   autocomplete: completeFromGlobalScope,
 });
 
+const editorExtension: Extension[] = [
+  props.setup,
+  props.language,
+  globalJavaScriptCompletions,
+  props.theme,
+  // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
+  EditorView.updateListener.of((v: ViewUpdate) => {
+    if (props.isEditable && !props.isCmd) {
+      const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
+      webEditorState.setLines(line, ch);
+    }
+
+    if (props.modelValue != v.state.doc.toString()) {
+      emit("changeCode", v.state.doc.toString());
+    }
+  }),
+  EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
+];
+
 const resetEditorDoc = () => {
   //cmd清空值
   editor.setState(editorState);
@@ -111,24 +130,7 @@ const refreshEditorDoc = (text: string) => {
   const editorState = EditorState.create({
     //为了实现cmd功能重置值,将editorState移出来可更新state
     doc: text,
-    extensions: [
-      props.setup,
-      props.language,
-      globalJavaScriptCompletions,
-      props.theme,
-      // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
-      EditorView.updateListener.of((v: ViewUpdate) => {
-        if (props.isEditable && !props.isCmd) {
-          const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
-          webEditorState.setLines(line, ch);
-        }
-
-        if (props.modelValue != v.state.doc.toString()) {
-          emit("changeCode", v.state.doc.toString());
-        }
-      }),
-      EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
-    ],
+    extensions: editorExtension,
   });
   editor.setState(editorState);
 };
@@ -145,24 +147,7 @@ const offsetToPos = (doc: Text, offset: number) => {
 const editorState = EditorState.create({
   //为了实现cmd功能重置值,将editorState移出来可更新state
   doc: props.modelValue,
-  extensions: [
-    props.setup,
-    props.language,
-    globalJavaScriptCompletions,
-    props.theme,
-    // 新版本一切皆插件，所以实时侦听数据变化也要通过写插件实现
-    EditorView.updateListener.of((v: ViewUpdate) => {
-      if (props.isEditable && !props.isCmd) {
-        const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
-        webEditorState.setLines(line, ch);
-      }
-
-      if (props.modelValue != v.state.doc.toString()) {
-        emit("changeCode", v.state.doc.toString());
-      }
-    }),
-    EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
-  ],
+  extensions: editorExtension,
 });
 onMounted(() => {
   //初始化编辑器实例

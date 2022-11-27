@@ -2,7 +2,7 @@
   <div>
     <p>上传本地文件,格式可以是HTML,CSS,JS</p>
     <p>如上传的是HTML文件,则会分解HTML,把链接分解导入iframe中</p>
-    <n-upload multiple directory-dnd :max="5" :file-list="fileList" @change="chooseFile">
+    <n-upload multiple directory-dnd :max="5" :file-list="fileLists" @change="chooseFile">
       <n-upload-dragger>
         <div style="margin-bottom: 12px">
           <n-icon size="48" :depth="3">
@@ -25,10 +25,12 @@ import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 import { type UploadFileInfo } from "naive-ui";
 import uploader, { type fileInfos, limitMimeType } from "@/utils/webEditor/uploader";
 import { useWebCodes } from "@/hooks/webEditor/useWebCodes";
+import { useUpLoadState } from "@/hooks/webEditor/useUpLoadState";
 const fileLists = ref<UploadFileInfo[]>([]); //naiveui中展示的文件列表
 const filterFileList = ref<File[]>([]); //过滤后的文件列表
 
 const webCodes = useWebCodes();
+const upLoadState = useUpLoadState();
 const getMimeType = (fileName: string): string => {
   return fileName.substring(fileName.lastIndexOf(".") + 1); //获取文件类型
 };
@@ -51,6 +53,8 @@ const upload = async () => {
         if (html) codeObj.html = html;
         if (css) codeObj.css = css;
         if (js) codeObj.js = js;
+        if (links) codeObj.links = links;
+        if (scripts) codeObj.scripts = scripts;
       }
       if (CSS) {
         codeObj.css = CSS.content as string;
@@ -58,10 +62,13 @@ const upload = async () => {
       if (JavaScript) {
         codeObj.js = JavaScript.content as string;
       }
-      const { html, css, js } = codeObj;
+      const { html, css, js, links, scripts } = codeObj;
       if (html) webCodes.setIndexModeCode(0, html);
       if (css) webCodes.setIndexModeCode(1, css);
       if (js) webCodes.setIndexModeCode(2, js);
+      if (links) upLoadState.setExternalLink("cssLink", links);
+      if (scripts) upLoadState.setExternalLink("jsLink", scripts);
+      upLoadState.setUpload();
       window.$message.success("上传成功,所有文件都上传完毕");
     })
     .catch(() => {

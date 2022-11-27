@@ -26,10 +26,21 @@ class IframeHandler {
    * @param {Function} onerror 代码执行异常监听函数
    * @param {Function} onunhandledrejection Promise执行异常监听函数
    */
-  async insertCode(code, isMD: boolean, onerror: any, onunhandledrejection: any) {
+  async insertCode(code, links, isMD: boolean = false, onerror: any, onunhandledrejection: any) {
     const { HTMLCode, CSSCode, JSCode } = code;
     const iWin: Window = this.iframe.contentWindow;
+    const { cssLinks, JSLinks } = links;
     const iDoc = iWin.document;
+    let extCss = "",
+      extJS = "";
+    for (let i = 0, k = cssLinks.length; i < k; i++) {
+      const linkStr = `<link href="${cssLinks[i]}" rel="stylesheet">\n`;
+      extCss += linkStr;
+    }
+    for (let i = 0, k = JSLinks.length; i < k; i++) {
+      const linkStr = `<script src="${JSLinks[i]}"></script>\n`;
+      extJS += linkStr;
+    }
     iDoc.open();
     iWin.onerror = onerror;
     iWin.onunhandledrejection = onunhandledrejection;
@@ -41,6 +52,8 @@ class IframeHandler {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
+    ${extJS}
+    ${extCss}
     <style>
     ${CSSCode}
     </style>

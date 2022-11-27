@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWebCodes } from "@/hooks/webEditor/useWebCodes";
+import { codeType, useWebCodes } from "@/hooks/webEditor/useWebCodes";
 import type { codeItem } from "@/hooks/webEditor/useWebCodes";
 import { ComputedRef, PropType, render } from "vue";
 import { useConsole } from "@/hooks/webEditor/useConsole";
@@ -60,6 +60,7 @@ import { NIcon } from "naive-ui";
 import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
 import Uploader from "../uploader/uploader.vue";
 import { renderIcon } from "@/utils";
+import { useUpLoadState } from "@/hooks/webEditor/useUpLoadState";
 
 const props = defineProps({
   width: {
@@ -77,9 +78,14 @@ const props = defineProps({
 });
 const WebEditorStates = useWebEditorStates();
 const webCodes = useWebCodes();
+const upLoadState = useUpLoadState();
 const fullScreenState = ref<boolean>(false);
-const editorTotalCode: ComputedRef<codeItem> = computed(() => {
+const editorTotalCode: ComputedRef<codeType> = computed(() => {
   return webCodes.getTotalCode;
+});
+
+const editorTemplateMode: ComputedRef<Array<string>> = computed(() => {
+  return webCodes.getTeamplateModes;
 });
 
 const refreshIframe = () => {
@@ -122,9 +128,9 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
       content: `Unhandled promise rejection: ${e.reason}`,
     });
   };
-  let HTMLCode = editorTotalCode.value[0].code,
-    CSSCode = editorTotalCode.value[1].code,
-    JSCode = editorTotalCode.value[2].code;
+  let HTMLCode = editorTotalCode.value[editorTemplateMode.value[0]].code,
+    CSSCode = editorTotalCode.value[editorTemplateMode.value[1]].code,
+    JSCode = editorTotalCode.value[editorTemplateMode.value[2]].code;
   if (webCodes.getIndex <= 2) {
     await compileHTML(HTMLCode, "0").then((res: string) => {
       HTMLCode = res;
@@ -142,6 +148,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
     IframeConsole.refresh(iframe);
     await IFramesHandler.insertCode(
       { HTMLCode, CSSCode, JSCode },
+      upLoadState.getExternalLink,
       false,
       onerror,
       onunhandledrejection,
