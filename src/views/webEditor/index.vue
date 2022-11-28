@@ -183,6 +183,7 @@ const getLanguage = (language: string): LanguageSupport => {
 };
 
 const changeCode = (newCode: string) => {
+  if (isUpload.value) return;
   webCodeStore.setModeCode(newCode);
 };
 
@@ -191,15 +192,6 @@ onMounted(() => {
   iframeHeight.value = ASideRef.value.firstElementChild.clientHeight;
   consoleHeight.value = ASideRef.value.scrollHeight - iframeHeight.value - 34;
   window.addEventListener("resize", watchWidthandHeight);
-
-  watch(
-    () => isUpload.value,
-    () => {
-      if (isUpload.value) {
-        editorRef.value[0].refreshEditorDoc(editorCode.value);
-      }
-    },
-  );
 });
 </script>
 

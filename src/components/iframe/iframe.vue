@@ -99,12 +99,13 @@ const fullScreenIframe = () => {
 
 const iframeRef = ref(null);
 onMounted(() => {
-  runCode(iframeRef.value);
   watch(
     editorTotalCode.value,
     debounce(() => {
       runCode(iframeRef.value);
+      console.log("runCode");
     }, 500),
+    { immediate: true },
   );
 });
 

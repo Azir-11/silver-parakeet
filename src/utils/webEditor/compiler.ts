@@ -39,33 +39,6 @@ async function compileMarkdown(code) {
   });
   return marked(code);
 }
-// function compilePug(code) {
-//   let pug;
-//   if (!loader.get("pug")) {
-//     pug = parserPug;
-//     loader.set("pug", pug);
-//   } else {
-//     pug = loader.get("pug");
-//   }
-//   return pug.compile(code)({});
-// }
-// async function compileSass(code: string) {
-//   // scss&sass
-//   let sassjs;
-//   if (!loader.get("sass")) {
-//     sassjs = sass;
-//     sassjs.setWorkerUrl(`../../public/js/sass.worker.js`);
-//     loader.set("sass", sass);
-//   } else {
-//     sassjs = loader.get("sass");
-//   }
-//   return new Promise((resolve) => {
-//     (new sass() as any).compile(code, (result) => {
-//       if (result.status === 0) resolve(result.text);
-//       else resolve(code);
-//     });
-//   });
-// }
 async function compileLess(code: string) {
   let less;
   // if (!loader.get("less")) {

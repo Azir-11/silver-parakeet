@@ -22,8 +22,8 @@ export const useUpLoadState = defineStore("UpLoadState", {
     setExternalLink(type: "cssLink" | "jsLink", list: string[]) {
       this.externalLink[type].list = list;
     },
-    setUpload() {
-      this.isUpLoad = true;
+    setUpload(flag: boolean) {
+      this.isUpLoad = flag;
     },
   },
 });

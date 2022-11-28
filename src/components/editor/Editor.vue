@@ -14,6 +14,8 @@ import { basicSetup } from "./setup";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
 import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
+import { useUpLoadState } from "@/hooks/webEditor/useUpLoadState";
+import { useWebCodes } from "@/hooks/webEditor/useWebCodes";
 let editor: EditorView; //将editor移出来可进行更多操作,如获取行数等
 const props = defineProps({
   // 编译器内的文本
@@ -49,7 +51,9 @@ const props = defineProps({
     default: false,
   },
 });
-
+const webCodeStore = useWebCodes(); //存储代码
+const upLoadState = useUpLoadState(); //上传状态钩子
+const isUpLoad = computed(() => upLoadState.isUpLoad); //上传状态
 const editorDom = ref(null);
 const emit = defineEmits(["changeCode"]);
 const completePropertyAfter = ["PropertyName", ".", "?."];
@@ -151,6 +155,12 @@ const editorState = EditorState.create({
 });
 onMounted(() => {
   //初始化编辑器实例
+  watch(
+    () => isUpLoad.value,
+    () => {
+      if (isUpLoad.value) refreshEditorDoc(webCodeStore.getModeCode);
+    },
+  );
   editor = new EditorView({
     parent: editorDom.value,
     state: editorState,
