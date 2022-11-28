@@ -183,7 +183,6 @@ const getLanguage = (language: string): LanguageSupport => {
 };
 
 const changeCode = (newCode: string) => {
-  if (isUpload.value) return;
   webCodeStore.setModeCode(newCode);
 };
 

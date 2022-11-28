@@ -103,7 +103,6 @@ onMounted(() => {
     editorTotalCode.value,
     debounce(() => {
       runCode(iframeRef.value);
-      console.log("runCode");
     }, 500),
     { immediate: true },
   );

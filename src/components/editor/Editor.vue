@@ -117,8 +117,9 @@ const editorExtension: Extension[] = [
       const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
       webEditorState.setLines(line, ch);
     }
-
-    if (props.modelValue != v.state.doc.toString()) {
+    const uploadValue = props.modelValue.replace(/\s/g, "").replace(/\r\n/g, "");
+    const docValue = v.state.doc.toString().replace(/\s/g, "").replace(/\r\n/g, "");
+    if (props.modelValue != v.state.doc.toString() && docValue !== uploadValue) {
       emit("changeCode", v.state.doc.toString());
     }
   }),
@@ -131,6 +132,7 @@ const resetEditorDoc = () => {
 };
 
 const refreshEditorDoc = (text: string) => {
+  console.log("editor", editor);
   const editorState = EditorState.create({
     //为了实现cmd功能重置值,将editorState移出来可更新state
     doc: text,
@@ -158,7 +160,9 @@ onMounted(() => {
   watch(
     () => isUpLoad.value,
     () => {
-      if (isUpLoad.value) refreshEditorDoc(webCodeStore.getModeCode);
+      if (isUpLoad.value && !props.isCmd && props.isEditable) {
+        refreshEditorDoc(webCodeStore.getModeCode);
+      }
     },
   );
   editor = new EditorView({

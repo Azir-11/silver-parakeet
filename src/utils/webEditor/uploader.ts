@@ -156,7 +156,6 @@ const resolveHTML = (content: string) => {
   html = tmpCode.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
   // css
   result = /<style[^>]*>(([\s\S])*?)<\/style>/g.exec(content);
-  console.log(result);
   if (result && result.length >= 2) css = result[1];
   // external css
   const linkList = content.match(/<link.*?(?:>|\/>)/gi);
@@ -188,7 +187,6 @@ const resolveHTML = (content: string) => {
     let url = "";
     for (let i = 0, content: string; (content = scriptList[i++]); ) {
       result = content.match(/<script .*?src=\"(.+?)\"/);
-      console.log("result", result);
       if (result && result.length === 2) url = result[1];
       if (HttpUrl.test(url)) scripts.push(url);
     }
