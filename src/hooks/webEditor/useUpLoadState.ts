@@ -1,6 +1,6 @@
 const externalLink = {
-  cssLink: { list: [] },
-  jsLink: { list: [] },
+  cssLink: { list: [] as string[] },
+  jsLink: { list: [] as string[] },
 };
 type externalLinkType = typeof externalLink;
 

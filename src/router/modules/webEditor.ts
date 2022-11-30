@@ -11,7 +11,7 @@ import { renderIcon } from "@/utils/index";
  * @param meta.title 菜单名称
  * @param meta.icon 菜单图标
  * @param meta.keepAlive 缓存该路由
- * @param meta.sort 排序越小越排前
+ * @param meta.order 排序越小越排前
  * @param meta.hidden 隐藏这个菜单项
  * @param meta.tabsHidden 在标签页中不显示该路由
  * */
@@ -19,7 +19,7 @@ import { renderIcon } from "@/utils/index";
 const routes: Array<RouteRecordRaw> = [
   {
     name: "wenEditor",
-    path: "/wenEditor",
+    path: "/webEditor",
     component: Layout,
     meta: {
       title: "web编辑器",
@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         name: "wenEditor_index",
-        path: "/wenEditor/index",
+        path: "/webEditor/index",
         component: () => import("@/views/webEditor/index.vue"),
         meta: {
           title: "web编辑器",

@@ -143,7 +143,6 @@ const refreshEditorDoc = (text: string) => {
 
 defineExpose({
   resetEditorDoc,
-  refreshEditorDoc,
 });
 
 const offsetToPos = (doc: Text, offset: number) => {
