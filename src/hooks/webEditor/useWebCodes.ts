@@ -50,7 +50,7 @@ export const useWebCodes = defineStore({
       } else if (this.templateType === "VUE3") {
         this.templateMode = ["HTML", "CSS", "VUE3JS"];
       } else if (this.templateType === "react") {
-        this.templateMode = ["JSX", "CSS"];
+        this.templateMode = ["HTML", "CSS", "JSX"];
       }
       return this.templateMode;
     },

@@ -28,7 +28,7 @@
             <div
               v-if="index === editorActiveIndex"
               class="h-full overflow-x-hidden"
-              :style="`width:${editorWidth}`"
+              :style="`width:${editorWidth - 6}px`"
             >
               <Editor
                 :id="'editor'"

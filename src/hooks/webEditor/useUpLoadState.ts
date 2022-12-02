@@ -11,7 +11,6 @@ export const useUpLoadState = defineStore("UpLoadState", {
   getters: {
     getExternalLink() {
       const { cssLink, jsLink } = this.externalLink;
-
       return { cssLinks: cssLink.list, JSLinks: jsLink.list };
     },
     isUpload(): boolean {
