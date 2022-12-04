@@ -174,6 +174,7 @@ onMounted(() => {
     () => {
       if (isUpLoad.value && !props.isCmd && props.isEditable) {
         refreshEditorDoc(webCodeStore.getModeCode);
+        upLoadState.setUpload(false);
       }
     },
   );
