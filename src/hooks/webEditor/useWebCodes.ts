@@ -35,11 +35,19 @@ export const useWebCodes = defineStore({
     templateType: string;
     index: number;
     templateMode: string[];
+    cursorPosition: Object[];
+    scroll: Object[];
   } => ({
     index: 0,
     templateType: "Vanilla",
     codeList: defaultCodeLists,
     templateMode: ["HTML", "CSS", "JS"],
+    cursorPosition: [{ anchor: 0 }, { anchor: 0 }, { anchor: 0 }],
+    scroll: [
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+      { x: 0, y: 0 },
+    ],
   }),
   getters: {
     getTeamplateModes(): Array<string> {
@@ -63,6 +71,12 @@ export const useWebCodes = defineStore({
     getIndex(): number {
       return this.index;
     },
+    getCursorPosition(): number {
+      return this.cursorPosition[this.index].anchor;
+    },
+    getScroll(): { x: number; y: number } {
+      return this.scroll[this.index];
+    },
   },
   actions: {
     setModeCode(newCode: string) {
@@ -79,6 +93,13 @@ export const useWebCodes = defineStore({
     },
     setIndexModeCode(index: number, newCode: string) {
       this.codeList[this.templateMode[index]].code = newCode;
+    },
+    setCursorPosition(anchor: number, index: number) {
+      this.cursorPosition[index].anchor = anchor;
+    },
+    setScrollTop(left: number, top: number, index: number) {
+      this.scroll[index].x = left;
+      this.scroll[index].y = top;
     },
   },
 });

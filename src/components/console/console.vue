@@ -154,8 +154,7 @@ import { useConsole } from "@/hooks/webEditor/useConsole";
 import { javascript } from "@codemirror/lang-javascript";
 import { consoleSetup, exeCmdSetup } from "../editor/setup";
 import Consoles from "@/utils/webEditor/console";
-import { MaybeElement, useResizeObserver } from "@vueuse/core";
-import type { DropdownMixedOption } from "naive-ui/es/dropdown/src/interface";
+import { useResizeObserver } from "@vueuse/core";
 import { NIcon } from "naive-ui";
 import { Component } from "vue";
 const renderIcon = (icon?: Component) => {

@@ -27,6 +27,7 @@
           >
             <div
               v-if="index === editorActiveIndex"
+              ref="scrollBar"
               class="h-full overflow-x-hidden"
               :style="`width:${editorWidth - 6}px`"
             >
@@ -85,10 +86,14 @@ theme.setDarkMode(true);
 // 标签页列表
 
 const editorRef = ref(null);
-
+const scrollBar = ref<HTMLElement>(null); //记录editor的滚动条
 const webCodeStore = useWebCodes();
 const upLoadState = useUpLoadState();
 const changeMode = (index: number) => {
+  const anchor = editorRef.value[0].getEditorCusorPos(); //切换时记录组件聚焦位置的状态
+  const scroll = scrollBar.value[0]; //切换组件时保存滚动条的位置
+  webCodeStore.setScrollTop(scroll.scrollLeft, scroll.scrollTop, editorActiveIndex.value);
+  webCodeStore.setCursorPosition(anchor, editorActiveIndex.value);
   webCodeStore.setIndex(index);
 };
 
@@ -191,6 +196,16 @@ onMounted(() => {
   iframeHeight.value = ASideRef.value.firstElementChild.clientHeight;
   consoleHeight.value = ASideRef.value.scrollHeight - iframeHeight.value - 34;
   window.addEventListener("resize", watchWidthandHeight);
+  watch(
+    () => editorActiveIndex.value,
+    () => {
+      nextTick(() => {
+        const { x, y } = webCodeStore.getScroll;
+        scrollBar.value[0].scrollTo(x, y);
+        editorRef.value[0].refreshEditorDoc(editorCode.value);
+      });
+    },
+  );
 });
 </script>
 

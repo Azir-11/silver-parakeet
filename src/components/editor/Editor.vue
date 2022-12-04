@@ -6,7 +6,7 @@
 import { PropType } from "vue";
 import { EditorView } from "codemirror";
 import { lineNumbers, ViewUpdate } from "@codemirror/view";
-import { countColumn, EditorState, StateEffect, Text } from "@codemirror/state";
+import { countColumn, EditorSelection, EditorState, StateEffect, Text } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
 import { foldAll, LanguageSupport, StringStream } from "@codemirror/language";
 import { Theme } from "./theme/projectTheme";
@@ -117,10 +117,18 @@ const editorExtension: Extension[] = [
       const { line, ch } = offsetToPos(v.state.doc, v.state.selection.main.head);
       webEditorState.setLines(line, ch);
     }
-    const uploadValue = props.modelValue.replace(/\s/g, "").replace(/\r\n/g, "");
-    const docValue = v.state.doc.toString().replace(/\s/g, "").replace(/\r\n/g, "");
-    if (props.modelValue != v.state.doc.toString() && docValue !== uploadValue) {
-      emit("changeCode", v.state.doc.toString());
+
+    if (!isUpLoad.value) {
+      if (props.modelValue != v.state.doc.toString()) {
+        emit("changeCode", v.state.doc.toString());
+      }
+    } else {
+      const uploadValue = props.modelValue.replace(/\s/g, "").replace(/\r\n/g, "");
+      const docValue = v.state.doc.toString().replace(/\s/g, "").replace(/\r\n/g, "");
+      if (props.modelValue != v.state.doc.toString() && uploadValue != docValue) {
+        console.log("v.state.doc.toString()", v.state.doc.toString());
+        emit("changeCode", v.state.doc.toString());
+      }
     }
   }),
   EditorView.editable.of(props.isEditable), //codemirror6修改值都需要通过of来修改
@@ -131,18 +139,24 @@ const resetEditorDoc = () => {
   editor.setState(editorState);
 };
 
+const getEditorCusorPos = () => {
+  return editor.state.selection.main.anchor;
+};
+
 const refreshEditorDoc = (text: string) => {
-  console.log("editor", editor);
-  const editorState = EditorState.create({
-    //为了实现cmd功能重置值,将editorState移出来可更新state
-    doc: text,
-    extensions: editorExtension,
-  });
-  editor.setState(editorState);
+  editor.setState(
+    EditorState.create({
+      doc: text,
+      extensions: editorExtension,
+      selection: { anchor: webCodeStore.getCursorPosition },
+    }),
+  );
 };
 
 defineExpose({
   resetEditorDoc,
+  getEditorCusorPos,
+  refreshEditorDoc,
 });
 
 const offsetToPos = (doc: Text, offset: number) => {
@@ -155,7 +169,6 @@ const editorState = EditorState.create({
   extensions: editorExtension,
 });
 onMounted(() => {
-  //初始化编辑器实例
   watch(
     () => isUpLoad.value,
     () => {
@@ -164,6 +177,7 @@ onMounted(() => {
       }
     },
   );
+  //初始化编辑器实例
   editor = new EditorView({
     parent: editorDom.value,
     state: editorState,

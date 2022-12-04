@@ -154,6 +154,8 @@ const resolveHTML = (content: string) => {
   result = /<body[^>]*>([\s\S]*)<\/body>/.exec(content);
   if (result && result.length === 2) tmpCode = result[1];
   html = tmpCode.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+  html = html.replaceAll("<!--  -->", "");
+
   // css
   result = /<style[^>]*>(([\s\S])*?)<\/style>/g.exec(content);
   if (result && result.length >= 2) css = result[1];
@@ -177,6 +179,7 @@ const resolveHTML = (content: string) => {
       if (result && result.length === 2) code = result[1];
       js += code + "\n";
     }
+    js = js.replaceAll("undefined", "");
   }
   // external js
   const scriptList = content.match(
@@ -191,8 +194,6 @@ const resolveHTML = (content: string) => {
       if (HttpUrl.test(url)) scripts.push(url);
     }
   }
-  html = html.replaceAll("<!--  -->", "");
-  js = js.replaceAll("undefined", "");
   return {
     html,
     css,
