@@ -45,22 +45,20 @@
 </template>
 
 <script setup lang="ts">
-import { codeType, useWebCodes } from "@/hooks/webEditor/useWebCodes";
-import type { codeItem } from "@/hooks/webEditor/useWebCodes";
-import { ComputedRef, PropType, render } from "vue";
 import { useConsole } from "@/hooks/webEditor/useConsole";
-import IframeHandler from "@/utils/webEditor/handleInstanceView";
-import { compileHTML, compileJS, compileCSS } from "@/utils/webEditor/compiler";
-import Consoles from "@/utils/webEditor/console";
-import { format } from "@/utils/webEditor/codeFormatter";
+import { useUpLoadState } from "@/hooks/webEditor/useUpLoadState";
+import { codeType, useWebCodes } from "@/hooks/webEditor/useWebCodes";
+import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
 import type { State } from "@/types/editor";
 import { debounce } from "@/utils/tools/tool";
-import { Refresh, Resize, CloudUploadOutline } from "@vicons/ionicons5";
+import { format } from "@/utils/webEditor/codeFormatter";
+import { compileCSS, compileHTML, compileJS } from "@/utils/webEditor/compiler";
+import Consoles from "@/utils/webEditor/console";
+import IframeHandler from "@/utils/webEditor/handleInstanceView";
+import { CloudUploadOutline, Refresh, Resize } from "@vicons/ionicons5";
 import { NIcon } from "naive-ui";
-import { useWebEditorStates } from "@/hooks/webEditor/useWebEditorState";
+import { ComputedRef, PropType } from "vue";
 import Uploader from "../uploader/uploader.vue";
-import { renderIcon } from "@/utils";
-import { useUpLoadState } from "@/hooks/webEditor/useUpLoadState";
 
 const props = defineProps({
   width: {
@@ -83,7 +81,7 @@ const fullScreenState = ref<boolean>(false);
 const editorTotalCode: ComputedRef<codeType> = computed(() => {
   return webCodes.getTotalCode;
 });
-
+const consoleInfos = ref([]);
 const editorTemplateMode: ComputedRef<Array<string>> = computed(() => {
   return webCodes.getTeamplateModes;
 });
@@ -99,12 +97,22 @@ const fullScreenIframe = () => {
 
 const iframeRef = ref(null);
 onMounted(() => {
+  nextTick(() => {
+    runCode(iframeRef.value);
+  });
   watch(
     editorTotalCode.value,
     debounce(() => {
       runCode(iframeRef.value);
     }, 500),
-    { immediate: true },
+  );
+  watch(
+    () => consoleInfos.value,
+    () => {
+      // console.log(consoleInfos.value);
+      useConsole().setConsoleInfo(consoleInfos.value);
+    },
+    { deep: true },
   );
 });
 
@@ -114,7 +122,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
   useConsole().setConsoleInfo([]);
   iframe.src = "/html/instance.html";
   const onerror = (msg: string, _, row: number, col: number) => {
-    IframeConsole.consoleInfo.push({
+    IframeConsole.consoleInfo.value.push({
       type: "system-error",
       content: msg,
       row,
@@ -123,7 +131,7 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
     return void 0;
   };
   const onunhandledrejection = (e: any) => {
-    IframeConsole.consoleInfo.push({
+    IframeConsole.consoleInfo.value.push({
       type: "error",
       content: `Unhandled promise rejection: ${e.reason}`,
     });
@@ -153,11 +161,13 @@ const runCode = async (iframe: HTMLIFrameElement): Promise<void> => {
       onerror,
       onunhandledrejection,
     );
-    useConsole().setConsoleInfo(IframeConsole.getLogs());
+    const logs = IframeConsole.getLogs();
+    consoleInfos.value = logs.value;
     const { error, info, warn } = logMsg();
     WebEditorStates.setLogsMsg(error, warn, info);
-  }, 500);
+  }, 200);
 };
+
 const logMsg = () => {
   const msgMap = ["info", "error", "system-error", "warn"];
   const logMsgCount = {

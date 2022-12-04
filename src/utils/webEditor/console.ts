@@ -1,3 +1,4 @@
+import type { Ref } from "vue";
 import {
   judgeBaseArray,
   judgeType,
@@ -29,13 +30,13 @@ export interface consoleinfo {
 interface ConsoleInstance {
   window: Window;
   console: Console;
-  consoleInfo: consoleinfo[];
+  consoleInfo: Ref<consoleinfo[]>;
   timerMap: Map<string, number>;
   consoleMethods: string[];
   ableMethods: string[];
   init(): void;
   clear(): void;
-  getLogs(): consoleinfo[];
+  getLogs(): Ref<consoleinfo[]>;
   refresh(iframe: HTMLIFrameElement): void;
   exeCmd(cmd: string): any;
   setTimer(name: string): void;
@@ -50,7 +51,7 @@ export default class Consoles {
   static instance: ConsoleInstance;
   window: Window;
   console: Console;
-  consoleInfo: consoleinfo[];
+  consoleInfo: Ref<consoleinfo[]>;
   timerMap: Map<string, number>;
   consoleMethods: string[];
   ableMethods: string[];
@@ -58,7 +59,7 @@ export default class Consoles {
     if (!Consoles.instance) {
       this.window = iframe.contentWindow;
       this.console = this.window.console;
-      this.consoleInfo = [];
+      this.consoleInfo = ref([]);
       this.timerMap = new Map();
       this.init();
       Consoles.instance = this;
@@ -88,7 +89,7 @@ export default class Consoles {
     // this.window.exeJSEncoderConsoleCmd = cmd => Function(`return (${cmd})`)()
     this.consoleMethods.forEach((item) => {
       iframeConsole[item] = (...arg) => {
-        // console[item](...arg); // 在浏览器控制台打印日志
+        console[item](...arg); // 在浏览器控制台打印日志
         switch (item) {
           case "time":
             this.setTimer(arg[0]);
@@ -98,7 +99,7 @@ export default class Consoles {
             const time = this.calcTime(arg[0]);
             const domClass = time ? highlightMap.number : highlightMap.undefined;
             const finContent = `<span class="${domClass}">${time}</span>`;
-            consoleInfo.push({
+            consoleInfo.value.push({
               type: "log",
               logs: [finContent],
             });
@@ -117,7 +118,7 @@ export default class Consoles {
               });
               finLog.type = "error";
               finLog.content = `Assertion failed: ${finLog.content}`;
-              consoleInfo.push(finLog);
+              consoleInfo.value.push(finLog);
             }
             break;
           }
@@ -126,7 +127,7 @@ export default class Consoles {
             let haveLargeOb = false;
             arg.forEach((item) => {
               if (judgeWindow(item)) {
-                consoleInfo.push({
+                consoleInfo.value.push({
                   type: "error",
                   content: "我测,你把window/global打印在我的小控制台上？自己康浏览器的控制台把",
                 });
@@ -138,7 +139,7 @@ export default class Consoles {
               type: item,
               content: arg,
             });
-            consoleInfo.push(finLog);
+            consoleInfo.value.push(finLog);
           }
         }
       };
@@ -149,15 +150,14 @@ export default class Consoles {
    */
   clear() {
     const consoleInfo = this.consoleInfo;
-    consoleInfo.splice(0, consoleInfo.length);
-    consoleInfo.pop();
+    consoleInfo.value.splice(0, consoleInfo.value.length);
+    consoleInfo.value.pop();
   }
   /**
    * 获取日志列表
    * @returns {Array}
    */
   getLogs() {
-    // console.log(this.consoleInfo);
     return this.consoleInfo;
   }
   /**
@@ -187,7 +187,7 @@ export default class Consoles {
       //   result = this.window.exeJSEncoderConsoleCmd(cmd)
       // }
       if (cmd === "window" || cmd === "console") {
-        this.consoleInfo.push({
+        this.consoleInfo.value.push({
           type: "error",
           content:
             "Sorry, this log was too large for our console. You might need to use the browser console instead.",
@@ -200,7 +200,7 @@ export default class Consoles {
       try {
         this.window.eval(cmd);
       } catch (err) {
-        this.consoleInfo.push({
+        this.consoleInfo.value.push({
           type: "error",
           content: err,
         });
@@ -213,7 +213,7 @@ export default class Consoles {
       content: [result],
     });
     log.type === "mix" && (log.type = "mixPrint");
-    this.consoleInfo.push(log);
+    this.consoleInfo.value.push(log);
   }
   /**
    * 设置计时器，如果该计时器已存在就不做操作

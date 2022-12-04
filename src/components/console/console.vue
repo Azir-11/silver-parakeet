@@ -241,7 +241,7 @@ const exeCmd = () => {
     consoleValue.value = "";
     cmd.value.resetEditorDoc();
     // cmdRef.value.resetEditorDoc();
-    useConsoles.setConsoleInfo(consoles.getLogs());
+    useConsoles.setConsoleInfo(consoles.getLogs().value);
   }
 };
 
