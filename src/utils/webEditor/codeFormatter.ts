@@ -47,7 +47,7 @@ const pluginMap = {
   Scss: parserCSS,
   Less: parserCSS,
   Stylus: parserCSS,
-  JavaScript: parserJavaScript,
+  JS: parserJavaScript,
   TypeScript: null,
   CoffeeScript: parserJavaScript,
   JSX: parserJavaScript,
@@ -67,7 +67,7 @@ loader.loadScript(externalLinks.formatLinks.typeScript).then(() => {
  * @param {String} mode
  * @returns {String}
  */
-function format(code: string, mode: string) {
+function format(code: string, mode: string): string {
   let parser = parserMap[mode];
   let plugin = pluginMap[mode];
   if (plugin === null) {
@@ -96,7 +96,7 @@ function format(code: string, mode: string) {
  * @param {String} code
  * @returns {String}
  */
-function simpleFormat(code: string) {
+function simpleFormat(code: string): string {
   if (!loader.get("formatJS")) {
     const formatJS = js;
     loader.set("formatJS", formatJS);

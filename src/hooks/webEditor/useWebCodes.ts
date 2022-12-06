@@ -1,4 +1,5 @@
 import { template } from "lodash-es";
+import { Extension } from "@codemirror/state";
 
 export interface codeItem {
   mode: string;
@@ -37,6 +38,7 @@ export const useWebCodes = defineStore({
     templateMode: string[];
     cursorPosition: Object[];
     scroll: Object[];
+    editorState: Extension[];
   } => ({
     index: 0,
     templateType: "Vanilla",
@@ -48,6 +50,7 @@ export const useWebCodes = defineStore({
       { x: 0, y: 0 },
       { x: 0, y: 0 },
     ],
+    editorState: [],
   }),
   getters: {
     getTeamplateModes(): Array<string> {
@@ -77,6 +80,9 @@ export const useWebCodes = defineStore({
     getScroll(): { x: number; y: number } {
       return this.scroll[this.index];
     },
+    getEditorState() {
+      return this.editorState;
+    },
   },
   actions: {
     setModeCode(newCode: string) {
@@ -100,6 +106,9 @@ export const useWebCodes = defineStore({
     setScrollTop(left: number, top: number, index: number) {
       this.scroll[index].x = left;
       this.scroll[index].y = top;
+    },
+    setEditorState(editorState: Extension[]) {
+      this.editorState = editorState;
     },
   },
 });

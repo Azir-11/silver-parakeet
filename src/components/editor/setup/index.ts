@@ -11,7 +11,7 @@ import {
 } from "@codemirror/view";
 export { EditorView } from "@codemirror/view";
 import { EditorState, Extension } from "@codemirror/state";
-import { indentWithTab } from "@codemirror/commands";
+import { emacsStyleKeymap, indentWithTab } from "@codemirror/commands";
 import {
   foldGutter,
   indentOnInput,
@@ -28,9 +28,11 @@ import {
   autocompletion,
   closeBracketsKeymap,
   completionKeymap,
+  snippetKeymap,
 } from "@codemirror/autocomplete";
 import { lintKeymap } from "@codemirror/lint";
 import { expandAbbreviation, abbreviationTracker } from "@emmetio/codemirror6-plugin";
+import { customEditorKeyMap } from "@/utils/webEditor/editorKeyMap";
 const emmetKeyMap = keymap.of([
   {
     key: "Tab",
@@ -66,6 +68,9 @@ const basicSetup: Extension[] = (() => [
     ...foldKeymap,
     ...completionKeymap,
     ...lintKeymap,
+    ...emacsStyleKeymap,
+    indentWithTab,
+    ...customEditorKeyMap,
   ]),
 ])();
 
@@ -99,6 +104,9 @@ const htmlSetup: Extension[] = (() => [
     ...foldKeymap,
     ...completionKeymap,
     ...lintKeymap,
+    ...emacsStyleKeymap,
+    indentWithTab,
+    ...customEditorKeyMap,
   ]),
   emmetKeyMap,
 ])();
@@ -130,6 +138,9 @@ const consoleSetup: Extension[] = (() => [
     ...foldKeymap,
     ...completionKeymap,
     ...lintKeymap,
+    ...emacsStyleKeymap,
+    indentWithTab,
+    ...customEditorKeyMap,
   ]),
 ])();
 
@@ -155,6 +166,9 @@ const exeCmdSetup: Extension[] = (() => [
     ...foldKeymap,
     ...completionKeymap,
     ...lintKeymap,
+    ...emacsStyleKeymap,
+    indentWithTab,
+    ...customEditorKeyMap,
   ]),
 ])();
 

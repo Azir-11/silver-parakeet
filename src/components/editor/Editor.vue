@@ -5,8 +5,8 @@
 <script lang="ts" setup>
 import { PropType } from "vue";
 import { EditorView } from "codemirror";
-import { lineNumbers, ViewUpdate } from "@codemirror/view";
-import { countColumn, EditorSelection, EditorState, StateEffect, Text } from "@codemirror/state";
+import { ViewUpdate } from "@codemirror/view";
+import { EditorState, Text } from "@codemirror/state";
 import { Extension } from "@codemirror/state";
 import { foldAll, LanguageSupport, StringStream } from "@codemirror/language";
 import { Theme } from "./theme/projectTheme";
@@ -118,15 +118,14 @@ const editorExtension: Extension[] = [
       webEditorState.setLines(line, ch);
     }
 
-    if (!isUpLoad.value) {
-      if (props.modelValue != v.state.doc.toString()) {
+    const uploadValue = props.modelValue.replace(/\s/g, "").replace(/\r\n/g, "");
+    const docValue = v.state.doc.toString().replace(/\s/g, "").replace(/\r\n/g, "");
+    if (isUpLoad.value) {
+      if (props.modelValue != v.state.doc.toString() && uploadValue != docValue) {
         emit("changeCode", v.state.doc.toString());
       }
     } else {
-      const uploadValue = props.modelValue.replace(/\s/g, "").replace(/\r\n/g, "");
-      const docValue = v.state.doc.toString().replace(/\s/g, "").replace(/\r\n/g, "");
-      if (props.modelValue != v.state.doc.toString() && uploadValue != docValue) {
-        console.log("v.state.doc.toString()", v.state.doc.toString());
+      if (props.modelValue != v.state.doc.toString()) {
         emit("changeCode", v.state.doc.toString());
       }
     }
@@ -136,7 +135,9 @@ const editorExtension: Extension[] = [
 
 const resetEditorDoc = () => {
   //cmd清空值
-  editor.setState(editorState);
+  editor.dispatch({
+    changes: { from: 0, to: editor.state.doc.length, insert: "" },
+  });
 };
 
 const getEditorCusorPos = () => {
@@ -144,13 +145,9 @@ const getEditorCusorPos = () => {
 };
 
 const refreshEditorDoc = (text: string) => {
-  editor.setState(
-    EditorState.create({
-      doc: text,
-      extensions: editorExtension,
-      selection: { anchor: webCodeStore.getCursorPosition },
-    }),
-  );
+  editor.dispatch({
+    changes: { from: 0, to: editor.state.doc.length, insert: text },
+  });
 };
 
 defineExpose({
@@ -183,6 +180,7 @@ onMounted(() => {
     parent: editorDom.value,
     state: editorState,
   });
+  webCodeStore.setEditorState(editorExtension);
   if (!props.isEditable) {
     foldAll(editor);
   }
