@@ -97,13 +97,13 @@ const fullScreenIframe = () => {
 
 const iframeRef = ref(null);
 onMounted(() => {
-  nextTick(() => {
-    runCode(iframeRef.value);
-  });
+  runCode(iframeRef.value);
   watch(
     editorTotalCode.value,
     debounce(() => {
-      runCode(iframeRef.value);
+      nextTick(async () => {
+        await runCode(iframeRef.value);
+      });
     }, 500),
   );
   watch(
